@@ -17,10 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local _M = loadPrevious(...)
+--local _M = loadPrevious(...)
 
 local Particles = require "engine.Particles"
 
+--getBirthDescriptor("subclass", "TrueNecromancer").talents_types["spell/necrotic-mastery"]={true, 0.3}
+--getBirthDescriptor("subclass", "TrueNecromancer").talents_types["spell/skeletal-minions"]={true, 0.3}
+
+--[[
 newBirthDescriptor{
 	type = "class",
 	name = "Mage",
@@ -41,6 +45,7 @@ newBirthDescriptor{
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
 	},
 }
+--]]
 
 newBirthDescriptor{
 	type = "subclass",
@@ -94,7 +99,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_NECROTIC_AURA] = 1,
-		[ActorTalents.T_CREATE_MINIONS] = 1,
+		--[ActorTalents.T_CREATE_MINIONS] = 1,
 		[ActorTalents.T_ARCANE_EYE] = 1,
 		[ActorTalents.T_INVOKE_DARKNESS] = 1,
 		[ActorTalents.T_BLURRED_MORTALITY] = 1,
@@ -113,4 +118,6 @@ newBirthDescriptor{
 	},
 }
 
-return _M
+getBirthDescriptor("class", "Mage").descriptor_choices.subclass.TrueNecromancer = "allow"
+
+--return _M

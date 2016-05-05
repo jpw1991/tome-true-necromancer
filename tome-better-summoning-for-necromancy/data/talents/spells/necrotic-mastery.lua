@@ -17,10 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local _M = loadPrevious(...)
+--local _M = loadPrevious(...)
 
 newTalent{
-	name = "Necrotic Aura", image = "talents/aura_mastery.png",
+	name = "True Necrotic Aura", image = "talents/aura_mastery.png",
 	type = {"spell/other", 1},
 	points = 1,
 	mode = "sustained",
@@ -60,8 +60,8 @@ newTalent{
 			"I told you I could Dash 100 yards and back in time! You owe me 10 gol....",
 		}, 40)
 	end,
-	getDecay = function(self, t) return math.max(3, 10 - self:getTalentLevelRaw(self.T_AURA_MASTERY)) end,
-	getRadius = function(self, t) return 2 + self:callTalent(self.T_AURA_MASTERY, "getbonusRadius") end,
+	getDecay = function(self, t) return math.max(3, 10 - self:getTalentLevelRaw(self.T_TRUE_AURA_MASTERY)) end,
+	getRadius = function(self, t) return 2 + self:callTalent(self.T_TRUE_AURA_MASTERY, "getbonusRadius") end,
 	activate = function(self, t)
 		local radius = t.getRadius(self, t)
 		local decay = t.getDecay(self, t)
@@ -111,19 +111,19 @@ newTalent{
 
 
 newTalent{
-	name = "Aura Mastery",
+	name = "True Aura Mastery",
 	type = {"spell/necrotic-mastery",2},
 	require = spells_req2,
 	points = 5,
 	mode = "passive",
 	getbonusRadius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	on_learn = function(self, t)
-		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
-		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		self:forceUseTalent(self.T_TRUE_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		self:forceUseTalent(self.T_TRUE_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
 	end,
 	on_unlearn = function(self, t)
-		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
-		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		self:forceUseTalent(self.T_TRUE_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		self:forceUseTalent(self.T_TRUE_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
 	end,
 	info = function(self, t)
 		return ([[Your dark power radiates further as you grow stronger. Increases the radius of your necrotic aura by %d, and reduces the decay rate of your minions outside the aura by %d%%.]]):
@@ -132,7 +132,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Surge of Undeath",
+	name = "True Surge of Undeath",
 	type = {"spell/necrotic-mastery",3},
 	require = spells_req3,
 	points = 5,
@@ -168,7 +168,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Dark Empathy",
+	name = "True Dark Empathy",
 	type = {"spell/necrotic-mastery",4},
 	require = spells_req4,
 	points = 5,
@@ -182,4 +182,4 @@ newTalent{
 	end,
 }
 
-return _M
+--return _M

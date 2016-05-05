@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local _M = loadPrevious(...)
+--local _M = loadPrevious(...)
 
 local skeleton_warrior_list = {
 	d_skel_warrior = {
@@ -303,7 +303,7 @@ local skeleton_warrior_order = {"d_skel_warrior", "skel_warrior", "a_skel_warrio
 --local minion_order = {"d_skel_warrior", "skel_warrior", "a_skel_warrior", "skel_archer", "skel_m_archer", "skel_mage", "ghoul", "ghast", "ghoulking","vampire", "m_vampire", "g_wight", "b_wight", "dread", "lich"} -- Sets listing order
 
 local function getSkeletonWarriorChances(self)
-  local skeletonWarriorTalentLevel = self:getTalentLevel(self.T_SKELETON_WARRIORS)
+  local skeletonWarriorTalentLevel = self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS)
 	if skeletonWarriorTalentLevel == 1 then
 		return { d_skel_warrior=80, skel_warrior=20, a_skel_warrior=0 }
 	elseif skeletonWarriorTalentLevel == 2 then
@@ -320,7 +320,7 @@ local function getSkeletonWarriorChances(self)
 end
 
 local function getSkeletonArcherChances(self)
-  local skeletonArcherTalentLevel = self:getTalentLevel(self.T_SKELETON_WARRIORS)
+  local skeletonArcherTalentLevel = self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS)
 	if skeletonArcherTalentLevel == 1 then
 		return { skel_archer=100, skel_m_archer=0 }
 	elseif skeletonArcherTalentLevel == 2 then
@@ -377,7 +377,7 @@ local function summonSkeleton(self, lev)
 end
 
 newTalent{
-	name = "Summon Skeletal Warriors",
+	name = "Summon Skeleton Warriors",
 	type = {"spell/skeletal-minions",1},
 	require = spells_req1,
 	points = 5,
@@ -388,16 +388,16 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_NECROTIC_AURA",
+	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_NECROTIC_AURA)
+		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
 		return aura.getRadius(self, aura)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_NECROTIC_AURA)
+		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 		if not p then return end
 		return true
 	end,
@@ -416,7 +416,7 @@ newTalent{
 		return chancelist:toString()
 	end,
 	action = function(self, t)
-		local p = self:isTalentActive(self.T_NECROTIC_AURA)
+		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 		local nb = t.getMax(self, t)
 		nb = math.min(nb, self:getSoul())
 		local lev = t.getLevel(self, t)
@@ -451,7 +451,7 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local mm = self:knowTalent(self.T_MINION_MASTERY) and " (Minion Mastery effects included)" or ""
+		local mm = self:knowTalent(self.T_MINION_STRENGTH) and " (Minion Strength effects included)" or ""
 		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
@@ -461,4 +461,4 @@ newTalent{
 
 
 
-return _M
+--return _M

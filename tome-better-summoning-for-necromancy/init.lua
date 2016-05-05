@@ -15,4 +15,4 @@ tags = {'better', 'summoning', 'necromancy', 'necromancer'} -- tags MUST immedia
 overload = false
 superload = true
 data = true
-hooks = false--true
+hooks = true
