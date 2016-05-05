@@ -304,9 +304,7 @@ local skeleton_warrior_order = {"d_skel_warrior", "skel_warrior", "a_skel_warrio
 
 local function getSkeletonWarriorChances(self)
   local skeletonWarriorTalentLevel = self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS)
-	if skeletonWarriorTalentLevel == 1 then
-		return { d_skel_warrior=80, skel_warrior=20, a_skel_warrior=0 }
-	elseif skeletonWarriorTalentLevel == 2 then
+	if skeletonWarriorTalentLevel == 2 then
 		return { d_skel_warrior=50, skel_warrior=40, a_skel_warrior=10 }
 	elseif skeletonWarriorTalentLevel == 3 then
 		return { d_skel_warrior=25, skel_warrior=50, a_skel_warrior=25 }
@@ -316,6 +314,9 @@ local function getSkeletonWarriorChances(self)
 		return { d_skel_warrior=0, skel_warrior=50, a_skel_warrior=50 }
 	elseif skeletonWarriorTalentLevel == 6 then
 		return { d_skel_warrior=0, skel_warrior=0, a_skel_warrior=100 }
+	else
+		-- level 1 or 0
+		return { d_skel_warrior=80, skel_warrior=20, a_skel_warrior=0 }
 	end
 end
 
@@ -411,7 +412,7 @@ newTalent{
 		local c = getSkeletonWarriorChances(self)
 		local chancelist = tstring({})
 		for i, k in ipairs(skeleton_warrior_order) do
-			 if c[k] then chancelist:add(true,minions_list[k].name:capitalize(),(": %d%%"):format(c[k])) end
+			 if c[k] then chancelist:add(true,skeleton_warrior_list[k].name:capitalize(),(": %d%%"):format(c[k])) end
 		end
 		return chancelist:toString()
 	end,
@@ -433,7 +434,7 @@ newTalent{
 		end)
 		local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 		for i = 1, nb do
-			local minion = makeMinion(self, self:getTalentLevel(t))
+			local minion = summonSkeleton(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end

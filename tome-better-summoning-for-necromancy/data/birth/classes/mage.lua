@@ -98,8 +98,8 @@ newBirthDescriptor{
 		end,
 	},
 	talents = {
-		[ActorTalents.T_NECROTIC_AURA] = 1,
-		--[ActorTalents.T_CREATE_MINIONS] = 1,
+		[ActorTalents.T_TRUE_NECROTIC_AURA] = 1,
+		[ActorTalents.T_SUMMON_SKELETON_WARRIORS] = 1,
 		[ActorTalents.T_ARCANE_EYE] = 1,
 		[ActorTalents.T_INVOKE_DARKNESS] = 1,
 		[ActorTalents.T_BLURRED_MORTALITY] = 1,
