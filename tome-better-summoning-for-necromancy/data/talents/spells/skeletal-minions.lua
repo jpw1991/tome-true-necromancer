@@ -436,9 +436,10 @@ newTalent{
 		for i = 1, nb do
 			local minion = summonSkeleton(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
+			local no_decay = self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS) >= 5 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, true)
+				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
 			end
 		end
 

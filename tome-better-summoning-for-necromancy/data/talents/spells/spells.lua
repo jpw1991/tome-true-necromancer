@@ -35,8 +35,8 @@ function necroGetNbSummon(self)
 end
 
 function applyDarkEmpathy(self, m)
-	if self:knowTalent(self.T_DARK_EMPATHY) then
-		local t = self:getTalentFromId(self.T_DARK_EMPATHY)
+	if self:knowTalent(self.T_TRUE_DARK_EMPATHY) then
+		local t = self:getTalentFromId(self.T_TRUE_DARK_EMPATHY)
 		local perc = t.getPerc(self, t)
 		for k, e in pairs(self.resists) do
 			m.resists[k] = (m.resists[k] or 0) + e * perc / 100
@@ -59,7 +59,7 @@ function applyDarkEmpathy(self, m)
 		m.stone_immune = (m.stone_immune or 0) + (self:attr("stone_immune") or 0) * perc / 100
 		m.teleport_immune = (m.teleport_immune or 0) + (self:attr("teleport_immune") or 0) * perc / 100
 
-		m.necrotic_minion_be_nice = self:getTalentLevelRaw(self.T_DARK_EMPATHY) * 0.2
+		m.necrotic_minion_be_nice = self:getTalentLevelRaw(self.T_TRUE_DARK_EMPATHY) * 0.2
 	end
 end
 
@@ -103,31 +103,42 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 	game.zone:addEntity(game.level, m, "actor", x, y)
 	game.level.map:particleEmitter(x, y, 1, "summon")
 
+  --[[
 	-- Summons decay
 	if not no_decay then
 		m.necrotic_aura_decaying = self.necrotic_aura_decay
 		m.on_act = function(self)
 			local src = self.summoner
-			if src and self.necrotic_aura_decaying and self.x and self.y and not src.dead and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= (src.necrotic_aura_radius or 0) then return end
+			if src and self.necrotic_aura_decaying and self.x and self.y and not src.dead and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= (src.true_necrotic_aura_radius or 0) then return end
 
 			self.life = self.life - self.max_life * (self.necrotic_aura_decaying or 10) / 100
 			self.changed = true
 			if self.life <= 0 then
 				game.logSeen(self, "#{bold}#%s decays into a pile of ash!#{normal}#", self.name:capitalize())
 				if src then
-					local t = src:getTalentFromId(src.T_NECROTIC_AURA)
+					local t = src:getTalentFromId(src.T_TRUE_NECROTIC_AURA)
 					t.die_speach(self, t)
 				end
 				self:die(self)
 			end
 		end
 	end
+  --]]
 
 	m.on_die = function(self, killer)
 		local src = self.summoner
 		local w = src:isTalentActive(src.T_WILL_O__THE_WISP)
-		local p = src:isTalentActive(src.T_NECROTIC_AURA)
-		if not w or not p or not self.x or not self.y or not src.x or not src.y or core.fov.distance(self.x, self.y, src.x, src.y) > self.summoner.necrotic_aura_radius then return end
+		local p = src:isTalentActive(src.T_TRUE_NECROTIC_AURA)
+    game.logSeen(killer, "dead")
+    -- restore the soul if dies within aura
+    if p and core.fov.distance(self.x, self.y, src.x, src.y) >= (src.true_necrotic_aura_radius or 0) then
+      game.logSeen(killer, "soul++")
+      src:incSoul(1)
+    else
+      game.logSeen(killer, "soul--")
+    end
+
+		if not w or not p or not self.x or not self.y or not src.x or not src.y or core.fov.distance(self.x, self.y, src.x, src.y) > self.summoner.true_necrotic_aura_radius then return end
 		if not rng.percent(w.chance) then return end
 
 		local t = src:getTalentFromId(src.T_WILL_O__THE_WISP)

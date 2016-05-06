@@ -17,35 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---local _M = loadPrevious(...)
-
 local Particles = require "engine.Particles"
-
---getBirthDescriptor("subclass", "TrueNecromancer").talents_types["spell/necrotic-mastery"]={true, 0.3}
---getBirthDescriptor("subclass", "TrueNecromancer").talents_types["spell/skeletal-minions"]={true, 0.3}
-
---[[
-newBirthDescriptor{
-	type = "class",
-	name = "Mage",
-	desc = {
-		"Mages are the wielders of arcane powers, able to cast powerful spells of destruction or to heal their wounds with nothing but a thought.",
-	},
-	descriptor_choices =
-	{
-		subclass =
-		{
-			__ALL__ = "disallow",
-			TrueNecromancer = "allow",
-		},
-	},
-	copy = {
-		mana_regen = 0.5,
-		mana_rating = 7,
-		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
-	},
-}
---]]
 
 newBirthDescriptor{
 	type = "subclass",
@@ -73,7 +45,7 @@ newBirthDescriptor{
 		["spell/skeletal-minions"]={true, 0.3},
 		--["spell/advanced-necrotic-minions"]={false, 0.3},
 		--["spell/shades"]={false, 0.3},
-		--["spell/necrosis"]={true, 0.3},
+		["spell/necrosis"]={true, 0.3},
 		--["spell/nightfall"]={true, 0.3},
 		--["spell/grave"]={true, 0.3},
 		--["spell/animus"]={true, 0.3},
@@ -98,6 +70,7 @@ newBirthDescriptor{
 		end,
 	},
 	talents = {
+		[ActorTalents.T_MINION_STRENGTH] = 1,
 		[ActorTalents.T_TRUE_NECROTIC_AURA] = 1,
 		[ActorTalents.T_SUMMON_SKELETON_WARRIORS] = 1,
 		[ActorTalents.T_ARCANE_EYE] = 1,
@@ -119,5 +92,3 @@ newBirthDescriptor{
 }
 
 getBirthDescriptor("class", "Mage").descriptor_choices.subclass.TrueNecromancer = "allow"
-
---return _M
