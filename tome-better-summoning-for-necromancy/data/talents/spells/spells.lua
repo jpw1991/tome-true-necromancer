@@ -24,12 +24,17 @@ newTalentType {
 
 -------------------------------------------
 -- Necromancer minions
-function necroGetNbSummon(self)
+function trueNecroGetNbSummon(self, minion_type)
 	local nb = 0
-	if not game.party or not game.party:hasMember(self) then return 0 end
+	if not game.party or not game.party:hasMember(self) then
+    return 0
+  end
 	-- Count party members
 	for act, def in pairs(game.party.members) do
-		if act.summoner and act.summoner == self and act.necrotic_minion then nb = nb + 1 end
+    game.logSeen(self, ("Minion type: %s"):format(act.minion_type))
+		if act.summoner and act.summoner == self and act.necrotic_minion and act.minion_type == minion_type then
+      nb = nb + 1
+    end
 	end
 	return nb
 end
@@ -63,11 +68,12 @@ function applyDarkEmpathy(self, m)
 	end
 end
 
-function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
+function necroSetupSummon(self, m, x, y, level, no_control, no_decay, minion_type)
 	m.faction = self.faction
 	m.summoner = self
 	m.summoner_gain_exp = true
 	m.necrotic_minion = true
+  m.minion_type = minion_type
 	m.exp_worth = 0
 	m.life_regen = 0
 	m.unused_stats = 0
@@ -129,13 +135,9 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 		local src = self.summoner
 		local w = src:isTalentActive(src.T_WILL_O__THE_WISP)
 		local p = src:isTalentActive(src.T_TRUE_NECROTIC_AURA)
-    game.logSeen(killer, "dead")
     -- restore the soul if dies within aura
     if p and core.fov.distance(self.x, self.y, src.x, src.y) >= (src.true_necrotic_aura_radius or 0) then
-      game.logSeen(killer, "soul++")
       src:incSoul(1)
-    else
-      game.logSeen(killer, "soul--")
     end
 
 		if not w or not p or not self.x or not self.y or not src.x or not src.y or core.fov.distance(self.x, self.y, src.x, src.y) > self.summoner.true_necrotic_aura_radius then return end
