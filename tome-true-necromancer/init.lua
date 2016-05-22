@@ -1,8 +1,8 @@
 -- Better Summoning for Necromancy
 -- tome-better-summoning-for-necromancy/init.lua
 
-long_name = "Better Summoning for Necromancy"
-short_name = "bettersummoningfornecromancy" -- Determines the name of your addon's file.
+long_name = "True Necromancer"
+short_name = "truenecromancer" -- Determines the name of your addon's file.
 for_module = "tome"
 version = {1,4,6}
 addon_version = {1,0,0}

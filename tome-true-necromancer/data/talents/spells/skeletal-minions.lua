@@ -384,6 +384,30 @@ local function summonSkeletonWarrior(self, lev)
 	m = require("mod.class.NPC").new(skeleton_warrior_list[m])
 	m.necrotic_minion = true
 	m.minion_type = "warrior"
+
+	--[[
+	-- improve the status of the summoned undead by the amount allowable from the Minion Strength talent
+	minion_strength = math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
+	--game.logSeen(self, ("minion_strength: %d"):format(minion_strength))
+	--game.logSeen(self, m.stats)
+	--if minion_strength ~= nil then
+  if m.minion_type == "warrior" then
+	  -- { str=14, dex=12, mag=10, con=12 }
+		m.stats["str"] = m.stats["str"] + minion_strength
+		m.stats["con"] = m.stats["con"] + minion_strength
+		--[[elseif m.minion_type == "archer" then
+			m.stats["dex"] = m.stats["dex"] + minion_strength
+			m.stats["con"] = m.stats["con"] + minion_strength
+		elseif m.minion_type == "mage" then
+			m.stats["mag"] = m.stats["mag"] + minion_strength
+			m.stats["con"] = m.stats["con"] + minion_strength
+		elseif m.minion_type == "lich" then
+			m.stats["mag"] = m.stats["mag"] + minion_strength
+			m.stats["con"] = m.stats["con"] + minion_strength
+		end
+	end--]]
+	--game.logSeen(self, m.stats)
+
 	return m
 end
 

@@ -1,6 +1,4 @@
 
---local _M = loadPrevious(...)
-
 -- Necromancer spells
 newTalentType {
   allow_random=true,
@@ -33,10 +31,10 @@ function trueNecroGetNbSummon(self, minion_type)
 	for act, def in pairs(game.party.members) do
 		if act.summoner and act.summoner == self and act.necrotic_minion and act.minion_type == minion_type then
       nb = nb + 1
-      game.logSeen(self, ("Minion type: %s"):format(act.minion_type))
+      --game.logSeen(self, ("Minion type: %s"):format(act.minion_type))
     end
 	end
-  game.logSeen(self, ("NB: %d, Minion type: %s"):format(nb, minion_type))
+  --game.logSeen(self, ("NB: %d, Minion type: %s"):format(nb, minion_type))
 	return nb
 end
 
@@ -167,7 +165,5 @@ function necroEssenceDead(self, checkonly)
 	end
 end
 
-load("/data-bettersummoningfornecromancy/talents/spells/dark-mastery.lua")
-load("/data-bettersummoningfornecromancy/talents/spells/skeletal-minions.lua")
-
---return _M
+load("/data-truenecromancer/talents/spells/dark-mastery.lua")
+load("/data-truenecromancer/talents/spells/skeletal-minions.lua")
