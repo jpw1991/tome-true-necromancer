@@ -7,8 +7,8 @@ newTalentType {
   no_silence=true,
   is_spell=true,
   mana_regen=true,
-  type="spell/necrotic-mastery",
-  name = "necrotic mastery",
+  type="spell/dark-mastery",
+  name = "dark mastery",
   description = "Increase the quality of your undead minions."
 }
 
@@ -31,11 +31,12 @@ function trueNecroGetNbSummon(self, minion_type)
   end
 	-- Count party members
 	for act, def in pairs(game.party.members) do
-    game.logSeen(self, ("Minion type: %s"):format(act.minion_type))
 		if act.summoner and act.summoner == self and act.necrotic_minion and act.minion_type == minion_type then
       nb = nb + 1
+      game.logSeen(self, ("Minion type: %s"):format(act.minion_type))
     end
 	end
+  game.logSeen(self, ("NB: %d, Minion type: %s"):format(nb, minion_type))
 	return nb
 end
 
@@ -68,12 +69,12 @@ function applyDarkEmpathy(self, m)
 	end
 end
 
-function necroSetupSummon(self, m, x, y, level, no_control, no_decay, minion_type)
+function necroSetupSummon(self, m, x, y, level, no_control, no_decay)--, minion_type)
 	m.faction = self.faction
 	m.summoner = self
 	m.summoner_gain_exp = true
 	m.necrotic_minion = true
-  m.minion_type = minion_type
+  --m.minion_type = minion_type
 	m.exp_worth = 0
 	m.life_regen = 0
 	m.unused_stats = 0
@@ -109,10 +110,10 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay, minion_typ
 	game.zone:addEntity(game.level, m, "actor", x, y)
 	game.level.map:particleEmitter(x, y, 1, "summon")
 
-  --[[
+
 	-- Summons decay
 	if not no_decay then
-		m.necrotic_aura_decaying = self.necrotic_aura_decay
+		m.necrotic_aura_decaying = self.true_necrotic_aura_decay
 		m.on_act = function(self)
 			local src = self.summoner
 			if src and self.necrotic_aura_decaying and self.x and self.y and not src.dead and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= (src.true_necrotic_aura_radius or 0) then return end
@@ -129,7 +130,7 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay, minion_typ
 			end
 		end
 	end
-  --]]
+
 
 	m.on_die = function(self, killer)
 		local src = self.summoner
@@ -166,7 +167,7 @@ function necroEssenceDead(self, checkonly)
 	end
 end
 
-load("/data-bettersummoningfornecromancy/talents/spells/necrotic-mastery.lua")
+load("/data-bettersummoningfornecromancy/talents/spells/dark-mastery.lua")
 load("/data-bettersummoningfornecromancy/talents/spells/skeletal-minions.lua")
 
 --return _M

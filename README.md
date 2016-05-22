@@ -28,24 +28,27 @@ These talents categories are replaced by the following ones:
 | Type | Name | Locked | Talents |
 | --- | --- | --- | --- |
 | Type | Name | Locked | Talent1 | Talent2 | Talent3 | Talent4 |
-| Spell | Skeletal Minions | No | Summon Skeleton Warriors | Summon Skeleton Archers | Summon Skeleton Mages | Summon Lich |
-| Spell | Fleshy Minions | No | Summon Ghouls | Summon Vampires | Summon Golem | Summon Wight |
+| Spell | Skeletal Minions | No | Summon Skeleton Warrior | Summon Skeleton Archer | Summon Skeleton Mage | Skeleton Mastery |
+| Spell | Fleshy Minions | No | Summon Ghouls | Summon Vampires | Summon Golem | Fleshy Mastery |
 | Spell | Dark Mastery | No | Minion Strength | True Aura Mastery | Soul Reserve | Dark Sacrifice |
-| Spell | Dark Utility | Locked | Dark Recall | Minion Explosion | Necrotic Frenzy | Considerate Minions |
+| Spell | Terrifying Minions | Yes | Summon Wight | Summon Dread | Summon Lich |  |
+| Spell | Dark Utility | Yes | Dark Recall | Minion Explosion | Necrotic Frenzy | Considerate Minions |
+
+Skeleton minions tend to be of a higher quality than fleshy minions, but can only be summoned one at a time. Fleshy minions tend to be of a lower quality than skeleton minions, but they're cheaper and can be summoned in bulk.
 
 Talent descriptions:
 
 | Category | Talent | Description |
 | --- | --- | --- |
-| Skeletal Minions | Summon Skeleton Warriors | Summons up to 5 skeleton warriors (1 warrior per level). |
-|  | Summon Skeleton Archers | Summon up to 5 skeleton archers (1 archer per level). |
-|  | Summon Skeleton Mages | Summon up to 5 skeleton mages (1 mage per level). |
-|  | Summon Lich | Summon a lich. |
-| Fleshy Minions | Summon Ghouls | Summons up to 5 ghouls (1 per level). |
-|  | Summon Vampires | Summon up to 5 vampires (1 per level). |
+| Skeletal Minions | Summon Skeleton Warriors | Summons a skeleton warrior (warrior capacity raised by each level). |
+|  | Summon Skeleton Archers | Summon a skeleton archer (archer capacity raised by each level). |
+|  | Summon Skeleton Mages | Summon a skeleton mage (mage capacity raised by each level). |
+|  | Skeleton Mastery | Improves the quality of skeleton minions. |
+| Fleshy Minions | Summon Ghoul | Summon a ghoul (ghoul capacity raised by each level). |
+|  | Summon Vampires | Summon a vampire (vampire capacity raised by each level). |
 |  | Summon Golem | The necromancer's Assemble ability, just renamed and put in this category. |
-|  | Summon Wight | Summon a wight. |
-| Dark Mastery | Minion Strength | Improves the quality of the minions summoned by all True Necromancer summoning abilities. |
+|  | Fleshy Mastery | Improves the quantity of fleshy minions summoned (Quantity raised by 1 per level). |
+| Dark Mastery | Minion Strength | Improves the strength of the minions summoned by all True Necromancer summoning abilities. |
 |  | True Aura Mastery | Improves the radius of the True Necrotic Aura. At max level this allows minions to survive even when outside the aura. Increases the chance of being refunded a soul when a minion dies within the aura by 15% per level. |
 |  | Soul Reserve | Increases soul capacity by 5 per level. |
 |  | Dark Sacrifice | A portion of the caster's life is sacrificed to generate a soul, starting at 75% at level 1 and ending at 25% at max level. |

@@ -306,16 +306,16 @@ local lich_order = {"lich"}
 --local minion_order = {"d_skel_warrior", "skel_warrior", "a_skel_warrior", "skel_archer", "skel_m_archer", "skel_mage", "ghoul", "ghast", "ghoulking","vampire", "m_vampire", "g_wight", "b_wight", "dread", "lich"} -- Sets listing order
 
 local function getSkeletonWarriorChances(self)
-  local minionStrength = math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
-	if minionStrength == 2 then
+  local quality = math.floor(self:getTalentLevel(self.T_SKELETON_MASTERY))
+	if quality == 2 then
 		return { d_skel_warrior=50, skel_warrior=40, a_skel_warrior=10 }
-	elseif minionStrength == 3 then
+	elseif quality == 3 then
 		return { d_skel_warrior=25, skel_warrior=50, a_skel_warrior=25 }
-	elseif minionStrength == 4 then
+	elseif quality == 4 then
 		return { d_skel_warrior=0, skel_warrior=75, a_skel_warrior=25 }
-	elseif minionStrength == 5 then
+	elseif quality == 5 then
 		return { d_skel_warrior=0, skel_warrior=50, a_skel_warrior=50 }
-	elseif minionStrength == 6 then
+	elseif quality == 6 then
 		return { d_skel_warrior=0, skel_warrior=0, a_skel_warrior=100 }
 	else
 		-- level 1 or 0
@@ -324,19 +324,20 @@ local function getSkeletonWarriorChances(self)
 end
 
 local function getSkeletonArcherChances(self)
-  local minionStrength = math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
-	if minionStrength == 1 then
-		return { skel_archer=100, skel_m_archer=0 }
-	elseif minionStrength == 2 then
+  local quality = math.floor(self:getTalentLevel(self.T_SKELETON_MASTERY))
+	if quality == 2 then
 		return { skel_archer=80, skel_m_archer=20 }
-	elseif minionStrength == 3 then
+	elseif quality == 3 then
 		return { skel_archer=60, skel_m_archer=40 }
-	elseif minionStrength == 4 then
+	elseif quality == 4 then
 		return { skel_archer=40, skel_m_archer=60 }
-	elseif minionStrength == 5 then
+	elseif quality == 5 then
 		return { skel_archer=20, skel_m_archer=80 }
-	elseif minionStrength == 6 then
+	elseif quality == 6 then
 		return { skel_archer=0, skel_m_archer=100 }
+	else
+		-- level 1 or 0
+	  return { skel_archer=100, skel_m_archer=0 }
 	end
 end
 
@@ -382,6 +383,7 @@ local function summonSkeletonWarrior(self, lev)
 	end
 	m = require("mod.class.NPC").new(skeleton_warrior_list[m])
 	m.necrotic_minion = true
+	m.minion_type = "warrior"
 	return m
 end
 
@@ -445,7 +447,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	fake_ressource = true,
-	mana = 5,
+	mana = 10, --+(math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS), "log")*2),
 	soul = function(self, t) return math.max(1, math.min(t.getMax(self, t), self:getSoul())) end,
 	cooldown = 14,
 	tactical = { ATTACK = 10 },
@@ -465,8 +467,8 @@ newTalent{
 		return true
 	end,
 	getMax = function(self, t)
-		local max = math.max(1, math.floor(self:combatTalentScale(t, 1, 5, "log")))
-		if necroEssenceDead(self, true) then max = max + 2 end
+		local max = math.max(1, math.floor(self:combatTalentScale(t, 1, math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS)))))--, "log"))))
+		--if necroEssenceDead(self, true) then max = max + 2 end
 		return max - trueNecroGetNbSummon(self, "warrior")
 	end, -- talent level 1-5 gives 1-5
 	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
@@ -497,15 +499,15 @@ newTalent{
 			end
 		end)
 		local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
-		for i = 1, nb do
-			local minion = summonSkeletonWarrior(self, self:getTalentLevel(t))
-			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS)) > 4 -- stop decay at level 5
-			if minion and pos then
-				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay, "warrior")
-			end
+		--for i = 1, nb do
+		local minion = summonSkeletonWarrior(self, self:getTalentLevel(t))
+		local pos = rng.tableRemove(possible_spots)
+		local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
+		if minion and pos then
+			if use_ressource then self:incSoul(-1) end
+			necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)--, "warrior")
 		end
+		--end
 
 		local empower = necroEssenceDead(self)
 		if empower then empower() end
@@ -517,8 +519,8 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local mm = self:knowTalent(self.T_MINION_STRENGTH) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise a skeleton warrior (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
+		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
+		return ([[Fires powerful undead energies through your necrotic aura. Expend a soul to produce a skeleton warrior. You can support up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
 		format(nb, lev, mm, t.MinionChancesDesc(self, t))
@@ -531,7 +533,7 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	fake_ressource = true,
-	mana = 5,
+	mana = 15,
 	soul = function(self, t) return math.max(1, math.min(t.getMax(self, t), self:getSoul())) end,
 	cooldown = 14,
 	tactical = { ATTACK = 10 },
@@ -589,7 +591,7 @@ newTalent{
 			local no_decay = math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_ARCHERS)) > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay, "archer")
+				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)--, "archer")
 			end
 		end
 
@@ -603,7 +605,7 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local mm = self:knowTalent(self.T_MINION_STRENGTH) and " (Minion Strength effects included)" or ""
+		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
 		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
@@ -617,7 +619,7 @@ newTalent{
 	require = spells_req3,
 	points = 5,
 	fake_ressource = true,
-	mana = 5,
+	mana = 25,
 	soul = function(self, t) return math.max(1, math.min(t.getMax(self, t), self:getSoul())) end,
 	cooldown = 14,
 	tactical = { ATTACK = 10 },
@@ -675,7 +677,7 @@ newTalent{
 			local no_decay = math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_MAGES)) > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay, "mage")
+				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)--, "mage")
 			end
 		end
 
@@ -689,7 +691,7 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local mm = self:knowTalent(self.T_MINION_STRENGTH) and " (Minion Strength effects included)" or ""
+		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
 		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
@@ -698,9 +700,22 @@ newTalent{
 }
 
 newTalent{
+	name = "Skeleton Mastery",
+	type = {"spell/skeletal-minions",4},
+	require = spells_req4,
+	points = 5,
+	mode = "passive",
+	info = function(self, t)
+		return ([[Increases the quality of your minions. Minion damage is increased by %d%% and health by %d%%.]]):
+		format(self:getTalentLevelRaw(t)*5, self:getTalentLevelRaw(t)*5)
+	end,
+}
+
+--[[
+newTalent{
 	name = "Summon Lich",
 	type = {"spell/skeletal-minions",4},
-	require = spells_req2,
+	require = spells_req4,
 	points = 5,
 	fake_ressource = true,
 	mana = 5,
@@ -775,12 +790,13 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local mm = self:knowTalent(self.T_MINION_STRENGTH) and " (Minion Strength effects included)" or ""
+		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
 		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
-		Each minion has a chance to be%s:%s]]):
+		Each minion has a chance to be%s:%s]REMOVEME]):
 		format(nb, lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
+--]]
 
 --return _M

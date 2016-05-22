@@ -67,8 +67,8 @@ newTalent{
 		local decay = t.getDecay(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
-			rad = self:addTemporaryValue("necrotic_aura_radius", radius),
-			decay = self:addTemporaryValue("necrotic_aura_decay", decay),
+			rad = self:addTemporaryValue("true_necrotic_aura_radius", radius),
+			decay = self:addTemporaryValue("true_necrotic_aura_decay", decay),
 			retch = self:addTemporaryValue("retch_heal", 1),
 			particle = self:addParticles(Particles.new("necrotic-aura", 1, {radius=radius})),
 			particle2 = self:addParticles(Particles.new("circle", 1, {oversize=0.7, a=75, appear=8, speed=8, img="necro_aura", radius=radius})),
@@ -79,8 +79,8 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeParticles(p.particle2)
 		self:removeTemporaryValue("retch_heal", p.retch)
-		self:removeTemporaryValue("necrotic_aura_radius", p.rad)
-		self:removeTemporaryValue("necrotic_aura_decay", p.decay)
+		self:removeTemporaryValue("true_necrotic_aura_radius", p.rad)
+		self:removeTemporaryValue("true_necrotic_aura_decay", p.decay)
 		return true
 	end,
 	info = function(self, t)
@@ -99,7 +99,7 @@ newTalent{
 
 newTalent{
 	name = "Minion Strength",
-	type = {"spell/necrotic-mastery",1},
+	type = {"spell/dark-mastery",1},
 	require = spells_req1,
 	points = 5,
 	mode = "passive",
@@ -112,7 +112,7 @@ newTalent{
 
 newTalent{
 	name = "True Aura Mastery",
-	type = {"spell/necrotic-mastery",2},
+	type = {"spell/dark-mastery",2},
 	require = spells_req2,
 	points = 5,
 	mode = "passive",
@@ -133,7 +133,7 @@ newTalent{
 
 newTalent{
 	name = "True Surge of Undeath",
-	type = {"spell/necrotic-mastery",3},
+	type = {"spell/dark-mastery",3},
 	require = spells_req3,
 	points = 5,
 	mana = 45,
@@ -169,7 +169,7 @@ newTalent{
 
 newTalent{
 	name = "True Dark Empathy",
-	type = {"spell/necrotic-mastery",4},
+	type = {"spell/dark-mastery",4},
 	require = spells_req4,
 	points = 5,
 	mode = "passive",
