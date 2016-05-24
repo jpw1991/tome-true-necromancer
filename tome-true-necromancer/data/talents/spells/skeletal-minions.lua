@@ -471,8 +471,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	fake_ressource = true,
-	mana = 10, --+(math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS), "log")*2),
-	soul = function(self, t) return math.max(1, math.min(t.getMax(self, t), self:getSoul())) end,
+	mana = 10,
 	cooldown = 14,
 	tactical = { ATTACK = 10 },
 	requires_target = true,
@@ -491,11 +490,11 @@ newTalent{
 		return true
 	end,
 	getMax = function(self, t)
-		local max = math.max(1, math.floor(self:combatTalentScale(t, 1, math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_WARRIORS)))))--, "log"))))
-		--if necroEssenceDead(self, true) then max = max + 2 end
-		return max - trueNecroGetNbSummon(self, "warrior")
-	end, -- talent level 1-5 gives 1-5
-	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
+		return math.floor(self:getTalentLevel(t))
+	end,
+	getLevel = function(self, t)
+		return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) + math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
+	end, -- -6 @ 1, +2 @ 5, +5 @ 8 + the minion strength
 	MinionChancesDesc = function(self)
 		local c = getSkeletonWarriorChances(self)
 		local chancelist = tstring({})
@@ -507,44 +506,45 @@ newTalent{
 		return chancelist:toString()
 	end,
 	action = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
+		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
-		nb = math.min(nb, self:getSoul())
-		local lev = t.getLevel(self, t)
+		if trueNecroGetNbSummon(self,"warrior") < nb then
+			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
+			local lev = t.getLevel(self, t)
 
-		-- Summon minions in a cone
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local possible_spots = {}
-		self:project(tg, x, y, function(px, py)
-			if not game.level.map:checkAllEntities(px, py, "block_move") then
-				possible_spots[#possible_spots+1] = {x=px, y=py}
+			-- Summon minions in a cone
+			local tg = self:getTalentTarget(t)
+			local x, y = self:getTarget(tg)
+			if not x or not y then return nil end
+			local possible_spots = {}
+			self:project(tg, x, y, function(px, py)
+				if not game.level.map:checkAllEntities(px, py, "block_move") then
+					possible_spots[#possible_spots+1] = {x=px, y=py}
+				end
+			end)
+			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
+			local minion = summonSkeletonWarrior(self, self:getTalentLevel(t))
+			local pos = rng.tableRemove(possible_spots)
+			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
+			if minion and pos then
+				if use_ressource then self:incSoul(-1) end
+				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
 			end
-		end)
-		local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
-		--for i = 1, nb do
-		local minion = summonSkeletonWarrior(self, self:getTalentLevel(t))
-		local pos = rng.tableRemove(possible_spots)
-		local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
-		if minion and pos then
-			if use_ressource then self:incSoul(-1) end
-			necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)--, "warrior")
-		end
-		--end
 
-		local empower = necroEssenceDead(self)
-		if empower then empower() end
+			local empower = necroEssenceDead(self)
+			if empower then empower() end
 
-		if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
-		game:playSoundNear(self, "talents/spell_generic2")
+			if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
+			game:playSoundNear(self, "talents/spell_generic2")
+	  end
+
 		return true
 	end,
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura. Expend a soul to produce a skeleton warrior. You can support up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Fires powerful undead energies through your necrotic aura, raising a long dead warrior to do your bidding. You can control up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
 		format(nb, lev, mm, t.MinionChancesDesc(self, t))
@@ -577,11 +577,11 @@ newTalent{
 		return true
 	end,
 	getMax = function(self, t)
-		local max = math.max(1, math.floor(self:combatTalentScale(t, 1, 5, "log")))
-		if necroEssenceDead(self, true) then max = max + 2 end
-		return max - trueNecroGetNbSummon(self, "archer")
+		return math.floor(self:getTalentLevel(t))
 	end, -- talent level 1-5 gives 1-5
-	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
+	getLevel = function(self, t)
+		return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) + math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
+	end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	MinionChancesDesc = function(self)
 		local c = getSkeletonArcherChances(self)
 		local chancelist = tstring({})
@@ -593,45 +593,45 @@ newTalent{
 		return chancelist:toString()
 	end,
 	action = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
+		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
-		nb = math.min(nb, self:getSoul())
-		local lev = t.getLevel(self, t)
+		if trueNecroGetNbSummon(self,"archer") < nb then
+			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
+			local lev = t.getLevel(self, t)
 
-		-- Summon minions in a cone
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local possible_spots = {}
-		self:project(tg, x, y, function(px, py)
-			if not game.level.map:checkAllEntities(px, py, "block_move") then
-				possible_spots[#possible_spots+1] = {x=px, y=py}
-			end
-		end)
-		local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
-		for i = 1, nb do
+			-- Summon minions in a cone
+			local tg = self:getTalentTarget(t)
+			local x, y = self:getTarget(tg)
+			if not x or not y then return nil end
+			local possible_spots = {}
+			self:project(tg, x, y, function(px, py)
+				if not game.level.map:checkAllEntities(px, py, "block_move") then
+					possible_spots[#possible_spots+1] = {x=px, y=py}
+				end
+			end)
+			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 			local minion = summonSkeletonArcher(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_ARCHERS)) > 4 -- stop decay at level 5
+			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)--, "archer")
+				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
 			end
-		end
 
-		local empower = necroEssenceDead(self)
-		if empower then empower() end
+			local empower = necroEssenceDead(self)
+			if empower then empower() end
 
-		if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
-		game:playSoundNear(self, "talents/spell_generic2")
+			if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
+			game:playSoundNear(self, "talents/spell_generic2")
+	  end
 		return true
 	end,
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
-		The minions level is your level %+d.
+		return ([[Fires powerful undead energies through your necrotic aura, raising a long dead marksman to do your bidding. You can control up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		The minion's level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
 		format(nb, lev, mm, t.MinionChancesDesc(self, t))
 	end,
@@ -663,11 +663,11 @@ newTalent{
 		return true
 	end,
 	getMax = function(self, t)
-		local max = math.max(1, math.floor(self:combatTalentScale(t, 1, 5, "log")))
-		if necroEssenceDead(self, true) then max = max + 2 end
-		return max - trueNecroGetNbSummon(self, "mage")
-	end, -- talent level 1-5 gives 1-5
-	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
+		return math.floor(self:getTalentLevel(t))
+	end,
+	getLevel = function(self, t)
+		return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) + math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
+	end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	MinionChancesDesc = function(self)
 		local c = getSkeletonMageChances(self)
 		local chancelist = tstring({})
@@ -679,45 +679,45 @@ newTalent{
 		return chancelist:toString()
 	end,
 	action = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
+		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
-		nb = math.min(nb, self:getSoul())
-		local lev = t.getLevel(self, t)
+		if trueNecroGetNbSummon(self,"mage") < nb then
+			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
+			local lev = t.getLevel(self, t)
 
-		-- Summon minions in a cone
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local possible_spots = {}
-		self:project(tg, x, y, function(px, py)
-			if not game.level.map:checkAllEntities(px, py, "block_move") then
-				possible_spots[#possible_spots+1] = {x=px, y=py}
-			end
-		end)
-		local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
-		for i = 1, nb do
+			-- Summon minions in a cone
+			local tg = self:getTalentTarget(t)
+			local x, y = self:getTarget(tg)
+			if not x or not y then return nil end
+			local possible_spots = {}
+			self:project(tg, x, y, function(px, py)
+				if not game.level.map:checkAllEntities(px, py, "block_move") then
+					possible_spots[#possible_spots+1] = {x=px, y=py}
+				end
+			end)
+			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 			local minion = summonSkeletonMage(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_SUMMON_SKELETON_MAGES)) > 4 -- stop decay at level 5
+			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)--, "mage")
+				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
 			end
-		end
 
-		local empower = necroEssenceDead(self)
-		if empower then empower() end
+			local empower = necroEssenceDead(self)
+			if empower then empower() end
 
-		if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
-		game:playSoundNear(self, "talents/spell_generic2")
+			if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
+			game:playSoundNear(self, "talents/spell_generic2")
+	  end
 		return true
 	end,
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
-		The minions level is your level %+d.
+		return ([[Fires powerful undead energies through your necrotic aura, raising an undead mage to do your bidding. You can control up to %d mages. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		The minion's level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
 		format(nb, lev, mm, t.MinionChancesDesc(self, t))
 	end,
@@ -730,8 +730,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
-		return ([[Increases the quality of your minions. Minion damage is increased by %d%% and health by %d%%.]]):
-		format(self:getTalentLevelRaw(t)*5, self:getTalentLevelRaw(t)*5)
+		return ([[Increases the quality of your minions.]])
 	end,
 }
 

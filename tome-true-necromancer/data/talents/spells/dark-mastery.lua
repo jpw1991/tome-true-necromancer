@@ -86,10 +86,6 @@ newTalent{
 	info = function(self, t)
 		local radius = t.getRadius(self, t)
 		local decay = t.getDecay(self, t)
-		--return ([[Emits a necrotic aura, sustaining your undead minions in a radius of %d. Minions outside the radius will lose %d%% life per turn.
-		--Any creature you or your minions kill within your aura will be absorbed as a soul that can be used to raise minions.
-		--Retch from your ghouls will also heal you, even if you are not undead.]]):
-		--format(radius, decay)
 		return ([[Emits a necrotic aura, sustaining your undead minions in a radius of %d. Minions outside the radius will lose %d%% life per turn.
 		Any creature you or your minions kill within your aura will be absorbed as a soul that can be used to raise minions.
 		Retch from your ghouls will also heal you, even if you are not undead. Minions that die inside the aura have a 12%% [2-24%%, 3-36%%, 4-48%%, 5-60%%] chance of returning a soul to you.]]):
@@ -104,8 +100,8 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
-		return ([[Increases the quality of your minions. Minion damage is increased by %d%% and health by %d%%.]]):
-		format(self:getTalentLevelRaw(t)*5, self:getTalentLevelRaw(t)*5)
+		return ([[Increases the quality of your minions by increasing their level by %%d.]]):
+		format(self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -126,11 +122,30 @@ newTalent{
 		self:forceUseTalent(self.T_TRUE_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
 	end,
 	info = function(self, t)
-		return ([[Your dark power radiates further as you grow stronger. Increases the radius of your necrotic aura by %d, and reduces the decay rate of your minions outside the aura by %d%%.]]):
+		return ([[Your dark power radiates further as you grow stronger. Increases the radius of your necrotic aura by %d, and reduces the decay rate of your minions outside the aura by %d%%. At max level your minions will not decay, even without the aura active.]]):
 		format(math.floor(t.getbonusRadius(self, t)), math.min(7, self:getTalentLevelRaw(t)))
 	end,
 }
 
+newTalent{
+	name = "Soul Reserve",
+	type = {"spell/dark-mastery",3},
+	require = spells_req3,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		-- raise the max souls
+		ret = {}
+		self:talentTemporaryValue(ret, "max_soul", self:getTalentLevelRaw(t)*5)
+		return ret
+	end,
+	info = function(self, t)
+		return ([[Increases your capacity for storing souls by %%d.]]):
+		format(self:getTalentLevelRaw(t)*5)
+	end,
+}
+
+--[[
 newTalent{
 	name = "True Surge of Undeath",
 	type = {"spell/dark-mastery",3},
@@ -162,7 +177,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A surge of power radiates to all your minions, increasing their Physical Power, Spellpower and Accuracy by %d, their Armour penetration by %d and their critical hit chance by %d for 6 turns.
-		The effects will increase with your Spellpower.]]):
+		The effects will increase with your Spellpower.]REMOVEME]):
 		format(t.getPower(self, t), t.getAPR(self, t), t.getCrit(self, t))
 	end,
 }
@@ -177,9 +192,10 @@ newTalent{
 	info = function(self, t)
 		return ([[You share your powers with your minions, granting them %d%% of your resistances and saves.
 		In addition all damage done by your minions to you is reduced by %d%%.
-		The effect will increase with your Spellpower.]]):
+		The effect will increase with your Spellpower.]REMOVEME]):
 		format(t.getPerc(self, t), self:getTalentLevelRaw(t) * 20)
 	end,
 }
+--]]
 
 --return _M

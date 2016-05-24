@@ -28,7 +28,7 @@ newBirthDescriptor{
 		"True Necromancers differentiate themselves from normal necromancers by having",
 		" great armies at the cost of their own power. Unlike other necromancers, true",
 		" necromancers have few attacks of their own and those that they do possess are",
-		" weak. A true necromancers weapon is their army, over which they have supreme",
+		" weak. A true necromancer's weapon is their army, over which they have supreme",
 		" control.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stat modifiers:",

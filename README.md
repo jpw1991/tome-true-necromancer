@@ -48,7 +48,7 @@ Talent descriptions:
 |  | Summon Vampires | Summon a vampire (vampire capacity raised by each level). |
 |  | Summon Golem | The necromancer's Assemble ability, just renamed and put in this category. |
 |  | Fleshy Mastery | Improves the quantity of fleshy minions summoned (Quantity raised by 1 per level). |
-| Dark Mastery | Minion Strength | Improves the strength of the minions summoned by all True Necromancer summoning abilities. |
+| Dark Mastery | Minion Strength | Improves the level of the minions summoned by all True Necromancer summoning abilities. |
 |  | True Aura Mastery | Improves the radius of the True Necrotic Aura. At max level this allows minions to survive even when outside the aura. Increases the chance of being refunded a soul when a minion dies within the aura by 15% per level. |
 |  | Soul Reserve | Increases soul capacity by 5 per level. |
 |  | Dark Sacrifice | A portion of the caster's life is sacrificed to generate a soul, starting at 75% at level 1 and ending at 25% at max level. |
@@ -56,3 +56,7 @@ Talent descriptions:
 |  | Minion Explosion | The necromancer's Undead Explosion ability, just renamed and put in this category. |
 |  | Necrotic Frenzy | The necromancer's Surge of Undeath ability, just renamed and put in this category. |
 |  | Considerate Minions | The necromancer's Dark Empathy ability, just renamed and put in this category BUT with the following difference: Friendly fire protection extends to minions themselves too (no more friendly fire from mages). |
+
+## Known Issues/Bugs
+
+- Killing enemies within the aura does not grant souls like it should.
