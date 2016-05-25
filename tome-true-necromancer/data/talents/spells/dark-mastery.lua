@@ -143,57 +143,32 @@ newTalent{
 	end,
 }
 
---[[
 newTalent{
-	name = "True Surge of Undeath",
-	type = {"spell/dark-mastery",3},
-	require = spells_req3,
+	name = "Dark Sacrifice",
+	type = {"spell/dark-mastery", 4},
+	require = spells_req4,
 	points = 5,
-	mana = 45,
-	cooldown = 20,
-	tactical = { ATTACKAREA = 2 },
-	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 60) end,
-	getCrit = function(self, t) return self:combatTalentSpellDamage(t, 6, 25) end,
-	getAPR = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
+	mana = 25,
+	cooldown = 6,
+	getPercent = function(self, t)
+		return 0.90 - (self:getTalentLevelRaw(t)*0.15)
+	end,
+	getDamage = function(self, t)
+		-- 75% at level 1, 25% at level 5
+		local percent = t.getPercent(self, t)
+		return self.life * percent
+	end,
 	action = function(self, t)
-		local apply = function(a)
-			a:setEffect(a.EFF_SURGE_OF_UNDEATH, 6, {power=t.getPower(self, t), apr=t.getAPR(self, t), crit=t.getCrit(self, t)})
-		end
-
-		if game.party and game.party:hasMember(self) then
-			for act, def in pairs(game.party.members) do
-				if act.summoner and act.summoner == self and act.necrotic_minion then apply(act) end
-			end
-		else
-			for uid, act in pairs(game.level.entities) do
-				if act.summoner and act.summoner == self and act.necrotic_minion then apply(act) end
-			end
-		end
-
-		game:playSoundNear(self, "talents/spell_generic2")
+		local damage = t.getDamage(self, t)
+		self.life = self.life - damage
+		self:incSoul(1)
+		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A surge of power radiates to all your minions, increasing their Physical Power, Spellpower and Accuracy by %d, their Armour penetration by %d and their critical hit chance by %d for 6 turns.
-		The effects will increase with your Spellpower.]REMOVEME]):
-		format(t.getPower(self, t), t.getAPR(self, t), t.getCrit(self, t))
+		local damage = t.getDamage(self, t)
+		local percent = t.getPercent(self, t)
+		return ([[You tap into your own life energy to generate a soul. Drains %d%% life.]]):
+		format(percent*100)
 	end,
 }
-
-newTalent{
-	name = "True Dark Empathy",
-	type = {"spell/dark-mastery",4},
-	require = spells_req4,
-	points = 5,
-	mode = "passive",
-	getPerc = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
-	info = function(self, t)
-		return ([[You share your powers with your minions, granting them %d%% of your resistances and saves.
-		In addition all damage done by your minions to you is reduced by %d%%.
-		The effect will increase with your Spellpower.]REMOVEME]):
-		format(t.getPerc(self, t), self:getTalentLevelRaw(t) * 20)
-	end,
-}
---]]
-
---return _M

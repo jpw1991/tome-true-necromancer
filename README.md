@@ -9,7 +9,11 @@ This mod does not replace the Necromancer class. It simply adds a new class call
 ## Brief Description
 
 Unlike the vanilla Necromancer, the True Necromancer has fewer direct attacks of his own and has to rely on
-his minions to deal damage. Without his minions, he is as helpless and pitiful. But with them, he's terrifying.
+his minions to deal damage. Without his minions, he is helpless and pitiful. But with them, he's terrifying.
+
+## Install
+Copy the `tome-true-necromancer` folder to your addons folder. On windows, this is something like:
+`D:\SteamLibrary\steamapps\common\TalesMajEyal\game\addons`
 
 ## Features
 
@@ -55,6 +59,24 @@ Talent descriptions:
 |  | Minion Explosion | The necromancer's Undead Explosion ability, just renamed and put in this category. |
 |  | Necrotic Frenzy | The necromancer's Surge of Undeath ability, just renamed and put in this category. |
 |  | Considerate Minions | The necromancer's Dark Empathy ability, just renamed and put in this category BUT with the following difference: Friendly fire protection extends to minions themselves too (no more friendly fire from mages). |
+
+## Inspiration for the mod
+I feel like there hasn't been a truly satisfying summoning experience in a game since Diablo 2.
+Tales of Maj'Eyal is a masterpiece and came so close to giving me what I wanted, but even then,
+not quite. So I decided to fix that.
+
+The `Skeletal Minions` category is intended to be quality over quantity - strong, useful troops with clearly defined roles, offering a broad
+spread of utility. This category is for the summoner who likes to prepare the perfect unit composition before
+heading into battle. Minions of this category can only be summoned one at a time, with 14 seconds cooldown, making
+replacements in the heat of battle difficult.
+
+The `Fleshy Minions` is intended to offer less quality but more convenience. Troops can be summoned in bursts
+and can therefore be replenished more easily, making investing some points in this category useful for emergency
+situations.
+
+`Terrifying Minions` is supposed to offer the necromancer expensive, yet powerful, units that can turn the
+tide of a battle. As an unlockable category, it's supposed that a necromancer only unlocks this at later
+levels.
 
 ## Known Issues/Bugs
 
