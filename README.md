@@ -25,9 +25,8 @@ The class has no access to the following Necromancer talent categories:
 
 These talents categories are replaced by the following ones:
 
-| Type | Name | Locked | Talents |
-| --- | --- | --- | --- |
 | Type | Name | Locked | Talent1 | Talent2 | Talent3 | Talent4 |
+| --- | --- | --- | --- | --- | --- | --- |
 | Spell | Skeletal Minions | No | Summon Skeleton Warrior | Summon Skeleton Archer | Summon Skeleton Mage | Skeleton Mastery |
 | Spell | Fleshy Minions | No | Summon Ghouls | Summon Vampires | Summon Golem | Fleshy Mastery |
 | Spell | Dark Mastery | No | Minion Strength | True Aura Mastery | Soul Reserve | Dark Sacrifice |
