@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---local _M = loadPrevious(...)
-
 newTalent{
 	name = "True Necrotic Aura", image = "talents/aura_mastery.png",
 	type = {"spell/other", 1},

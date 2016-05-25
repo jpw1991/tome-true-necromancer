@@ -13,7 +13,7 @@ his minions to deal damage. Without his minions, he is as helpless and pitiful. 
 
 ## Features
 
-** Warning: The following may change as I balance the mod **
+** Warning: The following may change as I develop and balance the mod **
 
 The class has no access to the following Necromancer talent categories:
 - Animus
@@ -46,8 +46,8 @@ Talent descriptions:
 |  | Skeleton Mastery | Improves the quality of skeleton minions. |
 | Fleshy Minions | Summon Ghoul | Summon a ghoul (ghoul capacity raised by each level). |
 |  | Summon Vampires | Summon a vampire (vampire capacity raised by each level). |
-|  | Summon Golem | The necromancer's Assemble ability, just renamed and put in this category. |
-|  | Fleshy Mastery | Improves the quantity of fleshy minions summoned (Quantity raised by 1 per level). |
+|  | Summon Golem | Summon a bone golem (maximum of two at top level). Requires no souls, only mana. |
+|  | Fleshy Mastery | Improves the quality and quantity of fleshy minions summoned (Quantity raised by 1 per level). |
 | Dark Mastery | Minion Strength | Improves the level of the minions summoned by all True Necromancer summoning abilities. |
 |  | True Aura Mastery | Improves the radius of the True Necrotic Aura. At max level this allows minions to survive even when outside the aura. Increases the chance of being refunded a soul when a minion dies within the aura by 15% per level. |
 |  | Soul Reserve | Increases soul capacity by 5 per level. |

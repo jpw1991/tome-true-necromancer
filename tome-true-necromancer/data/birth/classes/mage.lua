@@ -43,6 +43,7 @@ newBirthDescriptor{
 		["spell/divination"]={true, 0.2},
 		["spell/dark-mastery"]={true, 0.3},
 		["spell/skeletal-minions"]={true, 0.3},
+		["spell/fleshy-minions"]={true, 0.3},
 		--["spell/advanced-necrotic-minions"]={false, 0.3},
 		--["spell/shades"]={false, 0.3},
 		["spell/necrosis"]={true, 0.3},

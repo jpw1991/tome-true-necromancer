@@ -1,3 +1,21 @@
+-- ToME - Tales of Maj'Eyal
+-- Copyright (C) 2009 - 2016 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
 
 -- Necromancer spells
 newTalentType {
@@ -18,6 +36,16 @@ newTalentType {
   type="spell/skeletal-minions",
   name = "skeletal minions",
   description = "Create skeleton minions."
+}
+
+newTalentType {
+  allow_random=true,
+  no_silence=true,
+  is_spell=true,
+  mana_regen=true,
+  type="spell/fleshy-minions",
+  name = "fleshy minions",
+  description = "Create fleshy minions."
 }
 
 -------------------------------------------
@@ -167,3 +195,4 @@ end
 
 load("/data-truenecromancer/talents/spells/dark-mastery.lua")
 load("/data-truenecromancer/talents/spells/skeletal-minions.lua")
+load("/data-truenecromancer/talents/spells/fleshy-minions.lua")

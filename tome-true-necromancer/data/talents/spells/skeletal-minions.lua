@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---local _M = loadPrevious(...)
-
 local skeleton_warrior_list = {
 	d_skel_warrior = {
 		type = "undead", subtype = "skeleton",
@@ -349,25 +347,6 @@ local function getLichChances(self)
 	return { lich=100 }
 end
 
---[[
-local function getMinionChances(self)
-	local cl = math.floor(self:getTalentLevel(self.T_CREATE_MINIONS))
-	if cl <= 1 then
-		return { d_skel_warrior=55, skel_warrior=10, a_skel_warrior=0, skel_archer=10, skel_m_archer=0, skel_mage=5,   ghoul=20, ghast=0, ghoulking=0 }
-	elseif cl == 2 then
-		return { d_skel_warrior=31, skel_warrior=15, a_skel_warrior=2, skel_archer=15, skel_m_archer=2, skel_mage=10,  ghoul=20, ghast=5, ghoulking=0 }
-	elseif cl == 3 then
-		return { d_skel_warrior=24, skel_warrior=15, a_skel_warrior=5, skel_archer=20, skel_m_archer=4, skel_mage=10,  ghoul=15, ghast=5, ghoulking=2 }
-	elseif cl == 4 then
-		return { d_skel_warrior=9, skel_warrior=20, a_skel_warrior=10, skel_archer=15, skel_m_archer=6, skel_mage=10,  ghoul=15, ghast=10, ghoulking=5 }
-	elseif cl == 5 then
-		return { d_skel_warrior=9, skel_warrior=20, a_skel_warrior=10, skel_archer=10, skel_m_archer=8, skel_mage=15,  ghoul=10, ghast=10, ghoulking=8 }
-	elseif cl >= 6 then
-		return { d_skel_warrior=0, skel_warrior=25, a_skel_warrior=15, skel_archer=10, skel_m_archer=10, skel_mage=15, ghoul=5, ghast=10, ghoulking=10 }
-	end
-end
---]]
-
 local function summonSkeletonWarrior(self, lev)
 	local chances = getSkeletonWarriorChances(self)
 	local pick = rng.float(0,100)
@@ -384,30 +363,6 @@ local function summonSkeletonWarrior(self, lev)
 	m = require("mod.class.NPC").new(skeleton_warrior_list[m])
 	m.necrotic_minion = true
 	m.minion_type = "warrior"
-
-	--[[
-	-- improve the status of the summoned undead by the amount allowable from the Minion Strength talent
-	minion_strength = math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
-	--game.logSeen(self, ("minion_strength: %d"):format(minion_strength))
-	--game.logSeen(self, m.stats)
-	--if minion_strength ~= nil then
-  if m.minion_type == "warrior" then
-	  -- { str=14, dex=12, mag=10, con=12 }
-		m.stats["str"] = m.stats["str"] + minion_strength
-		m.stats["con"] = m.stats["con"] + minion_strength
-		--[[elseif m.minion_type == "archer" then
-			m.stats["dex"] = m.stats["dex"] + minion_strength
-			m.stats["con"] = m.stats["con"] + minion_strength
-		elseif m.minion_type == "mage" then
-			m.stats["mag"] = m.stats["mag"] + minion_strength
-			m.stats["con"] = m.stats["con"] + minion_strength
-		elseif m.minion_type == "lich" then
-			m.stats["mag"] = m.stats["mag"] + minion_strength
-			m.stats["con"] = m.stats["con"] + minion_strength
-		end
-	end--]]
-	--game.logSeen(self, m.stats)
-
 	return m
 end
 
@@ -426,6 +381,7 @@ local function summonSkeletonArcher(self, lev)
 	end
 	m = require("mod.class.NPC").new(skeleton_archer_list[m])
 	m.necrotic_minion = true
+	m.minion_type = "archer"
 	return m
 end
 
@@ -444,6 +400,7 @@ local function summonSkeletonMage(self, lev)
 	end
 	m = require("mod.class.NPC").new(skeleton_mage_list[m])
 	m.necrotic_minion = true
+	m.minion_type = "mage"
 	return m
 end
 
@@ -462,6 +419,7 @@ local function summonLich(self, lev)
 	end
 	m = require("mod.class.NPC").new(lich_list[m])
 	m.necrotic_minion = true
+	m.minion_type = "lich"
 	return m
 end
 
