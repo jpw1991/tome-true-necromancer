@@ -166,7 +166,7 @@ local vampire_list = {
 	},
 }
 
-local giant_list = {
+local golem_list = {
 	bone_giant = {
 		type = "undead", subtype = "giant",
 		blood_color = colors.GREY,
@@ -377,7 +377,7 @@ local function summonVampire(self, lev)
 			break
 		end
 	end
-	m = require("mod.class.NPC").new(skeleton_archer_list[m])
+	m = require("mod.class.NPC").new(vampire_list[m])
 	m.necrotic_minion = true
 	m.minion_type = "vampire"
 	return m
@@ -463,7 +463,7 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
+		local mm = self:knowTalent(self.T_FLESHY_MASTERY) and " (Minion Strength effects included)" or ""
 		return ([[Fires powerful undead energies through your necrotic aura, raising a pack of ghouls to command. You can control up to %d ghouls. The minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minion level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
@@ -551,7 +551,7 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
+		local mm = self:knowTalent(self.T_FLESHY_MASTERY) and " (Minion Strength effects included)" or ""
 		return ([[Fires powerful undead energies through your necrotic aura, raising a pack of vampires to command. You can control up to %d vampires. The minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minion level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
@@ -578,7 +578,7 @@ newTalent{
 			local kind = ({"bone_giant","bone_giant","h_bone_giant","h_bone_giant","e_bone_giant"})[util.bound(math.floor(self:getTalentLevel(t)), 1, 5)]
 			if self:getTalentLevel(t) >= 6 and rng.percent(20) then kind = "r_bone_giant" end
 
-			local minion = require("mod.class.NPC").new(minions_list[kind])
+			local minion = require("mod.class.NPC").new(golem_list[kind])
 			minion.necrotic_minion = true
 			minion.minion_type = "golem"
 			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
