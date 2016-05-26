@@ -84,4 +84,4 @@ levels.
 
 ## Known Issues/Bugs
 
-- Killing enemies within the aura does not grant souls like it should.
+None.
