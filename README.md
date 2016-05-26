@@ -78,7 +78,10 @@ situations.
 tide of a battle. As an unlockable category, it's supposed that a necromancer only unlocks this at later
 levels.
 
+## To do
+
+- `Considerate Minions` should stop friendly fire from minions to each other.
+
 ## Known Issues/Bugs
 
 - Killing enemies within the aura does not grant souls like it should.
-- Bone Golem can only be summoned once :(

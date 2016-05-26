@@ -45,11 +45,8 @@ newBirthDescriptor{
 		["spell/skeletal-minions"]={true, 0.3},
 		["spell/fleshy-minions"]={true, 0.3},
 		["spell/terrifying-minions"]={false, 0.3},
-		--["spell/shades"]={false, 0.3},
+		["spell/dark-utility"]={false, 0.3},
 		["spell/necrosis"]={true, 0.3},
-		--["spell/nightfall"]={true, 0.3},
-		--["spell/grave"]={true, 0.3},
-		--["spell/animus"]={true, 0.3},
 		["cunning/survival"]={true, -0.1},
 	},
 	unlockable_talents_types = {
@@ -73,9 +70,9 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_MINION_STRENGTH] = 1,
 		[ActorTalents.T_TRUE_NECROTIC_AURA] = 1,
-		[ActorTalents.T_SUMMON_SKELETON_WARRIORS] = 1,
+		[ActorTalents.T_SUMMON_SKELETON_WARRIORS] = 2,
 		[ActorTalents.T_ARCANE_EYE] = 1,
-		[ActorTalents.T_INVOKE_DARKNESS] = 1,
+		--[ActorTalents.T_INVOKE_DARKNESS] = 1,
 		[ActorTalents.T_BLURRED_MORTALITY] = 1,
 	},
 	copy = {

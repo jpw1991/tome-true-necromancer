@@ -58,6 +58,16 @@ newTalentType {
   description = "Create advanced undead minions."
 }
 
+newTalentType {
+  allow_random=true,
+  no_silence=true,
+  is_spell=true,
+  mana_regen=true,
+  type="spell/dark-utility",
+  name = "dark utility",
+  description = "Helpful spells."
+}
+
 -------------------------------------------
 -- Necromancer minions
 function trueNecroGetNbSummon(self, minion_type)
@@ -74,9 +84,9 @@ function trueNecroGetNbSummon(self, minion_type)
 	return nb
 end
 
-function applyDarkEmpathy(self, m)
-	if self:knowTalent(self.T_TRUE_DARK_EMPATHY) then
-		local t = self:getTalentFromId(self.T_TRUE_DARK_EMPATHY)
+function applyConsiderateMinions(self, m)
+	if self:knowTalent(self.T_CONSIDERATE_MINIONS) then
+		local t = self:getTalentFromId(self.T_CONSIDERATE_MINIONS)
 		local perc = t.getPerc(self, t)
 		for k, e in pairs(self.resists) do
 			m.resists[k] = (m.resists[k] or 0) + e * perc / 100
@@ -99,7 +109,7 @@ function applyDarkEmpathy(self, m)
 		m.stone_immune = (m.stone_immune or 0) + (self:attr("stone_immune") or 0) * perc / 100
 		m.teleport_immune = (m.teleport_immune or 0) + (self:attr("teleport_immune") or 0) * perc / 100
 
-		m.necrotic_minion_be_nice = self:getTalentLevelRaw(self.T_TRUE_DARK_EMPATHY) * 0.2
+		m.necrotic_minion_be_nice = self:getTalentLevelRaw(self.T_CONSIDERATE_MINIONS) * 0.2
 	end
 end
 
@@ -124,7 +134,7 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 	m.no_breath = 1
 	m.no_drops = true
 
-	applyDarkEmpathy(self, m)
+	applyConsiderateMinions(self, m)
 
 	if game.party:hasMember(self) then
 		local can_control = not no_control
@@ -204,3 +214,4 @@ load("/data-truenecromancer/talents/spells/dark-mastery.lua")
 load("/data-truenecromancer/talents/spells/skeletal-minions.lua")
 load("/data-truenecromancer/talents/spells/fleshy-minions.lua")
 load("/data-truenecromancer/talents/spells/terrifying-minions.lua")
+load("/data-truenecromancer/talents/spells/dark-utility.lua")

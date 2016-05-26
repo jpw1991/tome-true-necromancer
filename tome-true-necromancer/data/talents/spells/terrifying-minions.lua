@@ -260,7 +260,7 @@ end
 newTalent{
 	name = "Summon Wight",
 	type = {"spell/terrifying-minions",1},
-	require = spells_req1,
+	require = spells_req_high1,
 	points = 5,
 	fake_ressource = true,
 	mana = 80,
@@ -346,7 +346,7 @@ newTalent{
 newTalent{
 	name = "Summon Dread",
 	type = {"spell/terrifying-minions",2},
-	require = spells_req2,
+	require = spells_req_high2,
 	points = 5,
 	fake_ressource = true,
 	mana = 120,
@@ -432,7 +432,7 @@ newTalent{
 newTalent{
 	name = "Summon Lich",
 	type = {"spell/terrifying-minions",3},
-	require = spells_req3,
+	require = spells_req_high3,
 	points = 5,
 	fake_ressource = true,
 	mana = 250,

@@ -425,7 +425,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		-- only allow the summon if we haven't exceeded the limit
-		local nb = t.getMax(self, t)
+		local nb = t.getMax(self, t) - trueNecroGetNbSummon(self, "ghoul")
 		if trueNecroGetNbSummon(self,"ghoul") < nb then
 			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
@@ -513,7 +513,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		-- only allow the summon if we haven't exceeded the limit
-		local nb = t.getMax(self, t)
+		local nb = t.getMax(self, t) - trueNecroGetNbSummon(self, "vampire")
 		if trueNecroGetNbSummon(self,"vampire") < nb then
 			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
@@ -573,7 +573,7 @@ newTalent{
 	end,
 	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	action = function(self, t)
-		local nb = t.getMax(self, t)
+		local nb = t.getMax(self, t) - trueNecroGetNbSummon(self, "golem")
 		if trueNecroGetNbSummon(self,"golem") < nb then
 			local kind = ({"bone_giant","bone_giant","h_bone_giant","h_bone_giant","e_bone_giant"})[util.bound(math.floor(self:getTalentLevel(t)), 1, 5)]
 			if self:getTalentLevel(t) >= 6 and rng.percent(20) then kind = "r_bone_giant" end
