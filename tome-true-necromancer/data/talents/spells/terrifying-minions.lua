@@ -17,210 +17,103 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local skeleton_warrior_list = {
-	d_skel_warrior = {
-		type = "undead", subtype = "skeleton",
-		name = "degenerated skeleton warrior", color=colors.WHITE, image="npc/degenerated_skeleton_warrior.png",
-		blood_color = colors.GREY,
-		display = "s",
-		combat = { dam=1, atk=1, apr=1 },
+local wight_list = {
+	g_wight = {
+		type = "undead", subtype = "wight",
+		display = "W",
+		combat = { dam=resolvers.mbonus(30, 10), atk=10, apr=9, damtype=DamageType.DRAINEXP },
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 		level_range = {1, nil}, exp_worth = 0,
-		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-		infravision = 10,
-		rank = 2,
-		size_category = 3,
-		autolevel = "warrior",
-		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
-		stats = { str=14, dex=12, mag=10, con=12 },
-		resolvers.racial(),
-		resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
-		open_door = true,
-		cut_immune = 1,
-		blind_immune = 1,
-		poison_immune = 1,
-		fear_immune = 1,
-		see_invisible = 2,
-		undead = 1,
-		rarity = 1,
-
-		resolvers.equip{ {type="weapon", subtype="greatsword", autoreq=true} },
-		max_life = resolvers.rngavg(40,50),
-		combat_armor = 5, combat_def = 1,
-	},
-	skel_warrior = {
-		type = "undead", subtype = "skeleton",
-		name = "skeleton warrior", color=colors.SLATE, image="npc/skeleton_warrior.png",
-		blood_color = colors.GREY,
-		display = "s", color=colors.SLATE,
-		combat = { dam=1, atk=1, apr=1 },
-		level_range = {1, nil}, exp_worth = 0,
-		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-		infravision = 10,
-		rank = 2,
-		size_category = 3,
-		autolevel = "warrior",
-		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
-		stats = { str=14, dex=12, mag=10, con=12 },
-		resolvers.racial(),
-		resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
-		open_door = true,
-		cut_immune = 1,
-		blind_immune = 1,
-		fear_immune = 1,
-		see_invisible = 2,
-		poison_immune = 1,
-		undead = 1,
-		rarity = 1,
-
-		max_life = resolvers.rngavg(90,100),
-		combat_armor = 5, combat_def = 1,
-		resolvers.equip{ {type="weapon", subtype="greatsword", autoreq=true} },
-		resolvers.talents{ T_STUNNING_BLOW={base=1, every=7, max=5}, T_WEAPON_COMBAT={base=1, every=7, max=10}, T_WEAPONS_MASTERY={base=1, every=7, max=10}, },
-		ai_state = { talent_in=1, },
-	},
-	a_skel_warrior = {
-		type = "undead", subtype = "skeleton",
-		name = "armoured skeleton warrior", color=colors.STEEL_BLUE, image="npc/armored_skeleton_warrior.png",
-		blood_color = colors.GREY,
-		display = "s", color=colors.STEEL_BLUE,
-		combat = { dam=1, atk=1, apr=1 },
-		level_range = {1, nil}, exp_worth = 0,
-		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-		infravision = 10,
-		rank = 2,
-		size_category = 3,
-		autolevel = "warrior",
-		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
-		stats = { str=14, dex=12, mag=10, con=12 },
-		resolvers.racial(),
-		resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
-		open_door = true,
-		cut_immune = 1,
-		blind_immune = 1,
-		fear_immune = 1,
-		poison_immune = 1,
-		see_invisible = 2,
-		undead = 1,
-		rarity = 1,
-
-		resolvers.inscriptions(1, "rune"),
-		resolvers.talents{
-			T_WEAPON_COMBAT={base=1, every=7, max=10},
-			T_WEAPONS_MASTERY={base=1, every=7, max=10},
-			T_ARMOUR_TRAINING={base=2, every=14, max=4},
-			T_SHIELD_PUMMEL={base=1, every=7, max=5},
-			T_RIPOSTE={base=3, every=7, max=7},
-			T_OVERPOWER={base=1, every=7, max=5},
-			T_DISARM={base=3, every=7, max=7},
-		},
-		resolvers.equip{ {type="weapon", subtype="longsword", autoreq=true}, {type="armor", subtype="shield", autoreq=true}, {type="armor", subtype="heavy", autoreq=true} },
-		ai_state = { talent_in=1, },
-	},
-}
-local skeleton_archer_list = {
-	skel_archer = {
-		type = "undead", subtype = "skeleton",
-		name = "skeleton archer", color=colors.UMBER, image="npc/skeleton_archer.png",
-		blood_color = colors.GREY,
-		display = "s",
-		combat = { dam=1, atk=1, apr=1 },
-		level_range = {1, nil}, exp_worth = 0,
-		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-		infravision = 10,
-		rank = 2,
-		size_category = 3,
-		autolevel = "warrior",
-		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
-		stats = { str=14, dex=12, mag=10, con=12 },
-		resolvers.racial(),
-		resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
-		open_door = true,
-		cut_immune = 1,
-		blind_immune = 1,
-		fear_immune = 1,
-		poison_immune = 1,
-		see_invisible = 2,
-		undead = 1,
-		rarity = 1,
-		max_life = resolvers.rngavg(70,80),
-		combat_armor = 5, combat_def = 1,
-		resolvers.talents{ T_BOW_MASTERY={base=1, every=7, max=10}, T_WEAPON_COMBAT={base=1, every=7, max=10}, T_SHOOT=1, },
-		blighted_summon_talent = "T_BONE_SPEAR",
-		ai_state = { talent_in=1, },
-		autolevel = "archer",
-		resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
-	},
-	skel_m_archer = {
-		type = "undead", subtype = "skeleton",
-		name = "skeleton master archer", color=colors.LIGHT_UMBER, image="npc/master_skeleton_archer.png",
-		blood_color = colors.GREY,
-		display = "s",
-		combat = { dam=1, atk=1, apr=1 },
-		level_range = {1, nil}, exp_worth = 0,
-		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-		infravision = 10,
-		rank = 2,
-		size_category = 3,
-		autolevel = "warrior",
-		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
-		stats = { str=14, dex=12, mag=10, con=12 },
-		resolvers.racial(),
-		resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
-		open_door = true,
-		cut_immune = 1,
-		blind_immune = 1,
-		fear_immune = 1,
-		poison_immune = 1,
-		see_invisible = 2,
-		undead = 1,
-		rarity = 1,
-
-		max_life = resolvers.rngavg(70,80),
-		combat_armor = 5, combat_def = 1,
-		resolvers.talents{ T_BOW_MASTERY={base=1, every=7, max=10}, T_WEAPON_COMBAT={base=1, every=7, max=10}, T_SHOOT=1, T_PINNING_SHOT=3, T_CRIPPLING_SHOT=3, },
-		blighted_summon_talent = "T_BONE_SPEAR",
-		ai_state = { talent_in=1, },
-		rank = 3,
-		autolevel = "archer",
-		resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
-	},
-}
-
-local skeleton_mage_list = {
-	skel_mage = {
-		type = "undead", subtype = "skeleton",
-		name = "skeleton mage", color=colors.LIGHT_RED, image="npc/skeleton_mage.png",
-		blood_color = colors.GREY,
-		display = "s",
-		combat = { dam=1, atk=1, apr=1 },
-		level_range = {1, nil}, exp_worth = 0,
-		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-		infravision = 10,
-		rank = 2,
-		size_category = 3,
-		autolevel = "warrior",
-		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
-		stats = { str=14, dex=12, mag=10, con=12 },
-		resolvers.racial(),
-		resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
-		open_door = true,
-		cut_immune = 1,
-		blind_immune = 1,
-		fear_immune = 1,
-		poison_immune = 1,
-		see_invisible = 2,
-		undead = 1,
-		rarity = 1,
-
-		max_life = resolvers.rngavg(50,60),
-		max_mana = resolvers.rngavg(70,80),
-		combat_armor = 3, combat_def = 1,
-		stats = { str=10, dex=12, cun=14, mag=14, con=10 },
-		resolvers.talents{ T_STAFF_MASTERY={base=1, every=10, max=5}, T_FLAME={base=1, every=7, max=5}, T_MANATHRUST={base=2, every=7, max=5} },
-		blighted_summon_talent = "T_BONE_SPEAR",
-		resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
 		autolevel = "caster",
-		ai_state = { talent_in=1, },
+		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
+		stats = { str=11, dex=11, mag=15, con=12 },
+		infravision = 10,
+		rank = 2,
+		size_category = 3,
+		open_door = true,
+		resolvers.sustains_at_birth(),
+		resists = { [DamageType.COLD] = 80, [DamageType.FIRE] = 20, [DamageType.LIGHTNING] = 40, [DamageType.PHYSICAL] = 35, [DamageType.LIGHT] = -50, },
+		poison_immune = 1,
+		blind_immune = 1,
+		see_invisible = 7,
+		undead = 1,
+		name = "grave wight", color=colors.SLATE, image="npc/grave_wight.png",
+		desc=[[It is a ghostly form with eyes that haunt you.]],
+		max_life = resolvers.rngavg(70,80),
+		combat_armor = 9, combat_def = 6,
+		resolvers.talents{ T_FLAMESHOCK={base=2, every=5, max=6}, T_LIGHTNING={base=2, every=5, max=6}, T_GLACIAL_VAPOUR={base=2, every=5, max=6},
+			T_MIND_DISRUPTION={base=2, every=5, max=6},
+		},
+	},
+	b_wight = {
+		type = "undead", subtype = "wight",
+		display = "W",
+		combat = { dam=resolvers.mbonus(30, 10), atk=10, apr=9, damtype=DamageType.DRAINEXP },
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+		level_range = {1, nil}, exp_worth = 0,
+		autolevel = "caster",
+		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
+		stats = { str=11, dex=11, mag=15, con=12 },
+		infravision = 10,
+		rank = 2,
+		size_category = 3,
+		open_door = true,
+		resolvers.sustains_at_birth(),
+		resists = { [DamageType.COLD] = 80, [DamageType.FIRE] = 20, [DamageType.LIGHTNING] = 40, [DamageType.PHYSICAL] = 35, [DamageType.LIGHT] = -50, },
+		poison_immune = 1,
+		blind_immune = 1,
+		see_invisible = 7,
+		undead = 1,
+		name = "barrow wight", color=colors.LIGHT_RED, image="npc/barrow_wight.png",
+		resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/barrow_wight.png", display_h=2, display_y=-1}}},
+		desc=[[It is a ghostly nightmare of an entity.]],
+		max_life = resolvers.rngavg(80,90),
+		combat_armor = 10, combat_def = 8,
+		resolvers.talents{ T_FLAMESHOCK={base=3, every=5, max=7}, T_LIGHTNING={base=3, every=5, max=7}, T_GLACIAL_VAPOUR={base=3, every=5, max=7},
+			T_MIND_DISRUPTION={base=3, every=5, max=7},
+		},
+	},
+}
+
+local dread_list = {
+	dread = {
+		type = "undead", subtype = "ghost",
+		blood_color = colors.GREY,
+		display = "G",
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+		autolevel = "warriormage",
+		ai = "dumb_talented_simple", ai_state = { talent_in=2, },
+		stats = { str=14, dex=18, mag=20, con=12 },
+		rank = 2,
+		size_category = 3,
+		infravision = 10,
+		can_pass = {pass_wall=70},
+		resists = {all = 35, [DamageType.LIGHT] = -70, [DamageType.DARKNESS] = 65},
+		no_breath = 1,
+		stone_immune = 1,
+		confusion_immune = 1,
+		fear_immune = 1,
+		teleport_immune = 0.5,
+		disease_immune = 1,
+		poison_immune = 1,
+		stun_immune = 1,
+		blind_immune = 1,
+		cut_immune = 1,
+		see_invisible = 80,
+		undead = 1,
+		resolvers.sustains_at_birth(),
+		name = "dread", color=colors.ORANGE, image="npc/dread.png",
+		desc = [[It is a form that screams its presence against the eye. Death incarnate, its hideous black body seems to struggle against reality as the universe itself strives to banish it.]],
+		level_range = {1, nil}, exp_worth = 0,
+		max_life = resolvers.rngavg(90,100),
+		combat_armor = 0, combat_def = resolvers.mbonus(10, 50),
+		invisibility = resolvers.mbonus(5, 10),
+		ai_state = { talent_in=4, },
+		combat = { dam=resolvers.mbonus(45, 45), atk=resolvers.mbonus(25, 45), apr=100, dammod={str=0.5, mag=0.5} },
+		resolvers.talents{
+			T_BURNING_HEX={base=3, every=5, max=7},
+			T_BLUR_SIGHT={base=4, every=6, max=8},
+		},
 	},
 }
 
@@ -297,57 +190,24 @@ local lich_list = {
 	},
 }
 
-local skeleton_warrior_order = {"d_skel_warrior", "skel_warrior", "a_skel_warrior"} -- Sets listing order
-local skeleton_archer_order = {"skel_archer", "skel_m_archer"}
-local skeleton_mage_order = {"skel_mage"}
+local wight_order = {"g_wight", "b_wight"} -- Sets listing order
+local dread_order = {"dread"}
 local lich_order = {"lich"}
 
-local function getSkeletonWarriorChances(self)
-  local quality = math.floor(self:getTalentLevel(self.T_SKELETON_MASTERY))
-	if quality == 2 then
-		return { d_skel_warrior=50, skel_warrior=40, a_skel_warrior=10 }
-	elseif quality == 3 then
-		return { d_skel_warrior=25, skel_warrior=50, a_skel_warrior=25 }
-	elseif quality == 4 then
-		return { d_skel_warrior=0, skel_warrior=75, a_skel_warrior=25 }
-	elseif quality == 5 then
-		return { d_skel_warrior=0, skel_warrior=50, a_skel_warrior=50 }
-	elseif quality == 6 then
-		return { d_skel_warrior=0, skel_warrior=0, a_skel_warrior=100 }
-	else
-		-- level 1 or 0
-		return { d_skel_warrior=80, skel_warrior=20, a_skel_warrior=0 }
-	end
+local function getWightChances(self)
+	return { g_wight=50, b_wight=50 }
 end
 
-local function getSkeletonArcherChances(self)
-  local quality = math.floor(self:getTalentLevel(self.T_SKELETON_MASTERY))
-	if quality == 2 then
-		return { skel_archer=80, skel_m_archer=20 }
-	elseif quality == 3 then
-		return { skel_archer=60, skel_m_archer=40 }
-	elseif quality == 4 then
-		return { skel_archer=40, skel_m_archer=60 }
-	elseif quality == 5 then
-		return { skel_archer=20, skel_m_archer=80 }
-	elseif quality == 6 then
-		return { skel_archer=0, skel_m_archer=100 }
-	else
-		-- level 1 or 0
-	  return { skel_archer=100, skel_m_archer=0 }
-	end
-end
-
-local function getSkeletonMageChances(self)
-	return { skel_mage=100 }
+local function getDreadChances(self)
+	return { dread=100 }
 end
 
 local function getLichChances(self)
 	return { lich=100 }
 end
 
-local function summonSkeletonWarrior(self, lev)
-	local chances = getSkeletonWarriorChances(self)
+local function summonWight(self, lev)
+	local chances = getWightChances(self)
 	local pick = rng.float(0,100)
 	local tot, m = 0
 	for k, e in pairs(chances) do
@@ -357,14 +217,14 @@ local function summonSkeletonWarrior(self, lev)
 			break
 		end
 	end
-	m = require("mod.class.NPC").new(skeleton_warrior_list[m])
+	m = require("mod.class.NPC").new(wight_list[m])
 	m.necrotic_minion = true
-	m.minion_type = "warrior"
+	m.minion_type = "wight"
 	return m
 end
 
-local function summonSkeletonArcher(self, lev)
-	local chances = getSkeletonArcherChances(self)
+local function summonDread(self, lev)
+	local chances = getDreadChances(self)
 	local pick = rng.float(0,100)
 	local tot, m = 0
 	for k, e in pairs(chances) do
@@ -374,26 +234,9 @@ local function summonSkeletonArcher(self, lev)
 			break
 		end
 	end
-	m = require("mod.class.NPC").new(skeleton_archer_list[m])
+	m = require("mod.class.NPC").new(dread_list[m])
 	m.necrotic_minion = true
-	m.minion_type = "archer"
-	return m
-end
-
-local function summonSkeletonMage(self, lev)
-	local chances = getSkeletonMageChances(self)
-	local pick = rng.float(0,100)
-	local tot, m = 0
-	for k, e in pairs(chances) do
-		tot = tot + e
-		if tot > pick then
-			m = k
-			break
-		end
-	end
-	m = require("mod.class.NPC").new(skeleton_mage_list[m])
-	m.necrotic_minion = true
-	m.minion_type = "mage"
+	m.minion_type = "dread"
 	return m
 end
 
@@ -415,13 +258,13 @@ local function summonLich(self, lev)
 end
 
 newTalent{
-	name = "Summon Skeleton Warriors",
-	type = {"spell/skeletal-minions",1},
+	name = "Summon Wight",
+	type = {"spell/terrifying-minions",1},
 	require = spells_req1,
 	points = 5,
 	fake_ressource = true,
-	mana = 10,
-	cooldown = 14,
+	mana = 80,
+	cooldown = 20,
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
@@ -445,11 +288,11 @@ newTalent{
 		return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) + math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
 	end, -- -6 @ 1, +2 @ 5, +5 @ 8 + the minion strength
 	MinionChancesDesc = function(self)
-		local c = getSkeletonWarriorChances(self)
+		local c = getWightChances(self)
 		local chancelist = tstring({})
-		for i, k in ipairs(skeleton_warrior_order) do
+		for i, k in ipairs(wight_order) do
 			if c[k] then
-				chancelist:add(true,skeleton_warrior_list[k].name:capitalize(),(": %d%%"):format(c[k]))
+				chancelist:add(true,wight_list[k].name:capitalize(),(": %d%%"):format(c[k]))
 			end
 		end
 		return chancelist:toString()
@@ -457,7 +300,7 @@ newTalent{
 	action = function(self, t)
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
-		if trueNecroGetNbSummon(self,"warrior") < nb then
+		if trueNecroGetNbSummon(self,"wight") < nb then
 			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
@@ -472,7 +315,7 @@ newTalent{
 				end
 			end)
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
-			local minion = summonSkeletonWarrior(self, self:getTalentLevel(t))
+			local minion = summonWight(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
 			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
@@ -492,8 +335,8 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising a long dead warrior to do your bidding. You can control up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		local mm = self:knowTalent(self.T_FLESHY_MASTERY) and " (Minion Strength effects included)" or ""
+		return ([[Fires powerful undead energies through your necrotic aura, attracting wights to your cause. You can control up to %d wights. The minion will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
 		format(nb, lev, mm, t.MinionChancesDesc(self, t))
@@ -501,14 +344,14 @@ newTalent{
 }
 
 newTalent{
-	name = "Summon Skeleton Archers",
-	type = {"spell/skeletal-minions",2},
+	name = "Summon Dread",
+	type = {"spell/terrifying-minions",2},
 	require = spells_req2,
 	points = 5,
 	fake_ressource = true,
-	mana = 15,
+	mana = 120,
 	soul = function(self, t) return math.max(1, math.min(t.getMax(self, t), self:getSoul())) end,
-	cooldown = 14,
+	cooldown = 30,
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
@@ -532,11 +375,11 @@ newTalent{
 		return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) + math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
 	end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	MinionChancesDesc = function(self)
-		local c = getSkeletonArcherChances(self)
+		local c = getDreadChances(self)
 		local chancelist = tstring({})
-		for i, k in ipairs(skeleton_archer_order) do
+		for i, k in ipairs(dread_order) do
 			if c[k] then
-				chancelist:add(true,skeleton_archer_list[k].name:capitalize(),(": %d%%"):format(c[k]))
+				chancelist:add(true,dread_list[k].name:capitalize(),(": %d%%"):format(c[k]))
 			end
 		end
 		return chancelist:toString()
@@ -544,7 +387,7 @@ newTalent{
 	action = function(self, t)
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
-		if trueNecroGetNbSummon(self,"archer") < nb then
+		if trueNecroGetNbSummon(self,"dread") < nb then
 			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
@@ -559,7 +402,7 @@ newTalent{
 				end
 			end)
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
-			local minion = summonSkeletonArcher(self, self:getTalentLevel(t))
+			local minion = summonDread(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
 			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
@@ -579,7 +422,7 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising a long dead marksman to do your bidding. You can control up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Fires powerful undead energies through your necrotic aura, forcing an ancient spectre to your cause. You can control up to %d dreads. The minion will be raised within a cone that extends to the edge of your necrotic aura.
 		The minion's level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
 		format(nb, lev, mm, t.MinionChancesDesc(self, t))
@@ -587,14 +430,14 @@ newTalent{
 }
 
 newTalent{
-	name = "Summon Skeleton Mages",
-	type = {"spell/skeletal-minions",3},
+	name = "Summon Lich",
+	type = {"spell/terrifying-minions",3},
 	require = spells_req3,
 	points = 5,
 	fake_ressource = true,
-	mana = 25,
+	mana = 250,
 	soul = function(self, t) return math.max(1, math.min(t.getMax(self, t), self:getSoul())) end,
-	cooldown = 14,
+	cooldown = 60,
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
@@ -618,11 +461,11 @@ newTalent{
 		return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) + math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
 	end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	MinionChancesDesc = function(self)
-		local c = getSkeletonMageChances(self)
+		local c = getLichChances(self)
 		local chancelist = tstring({})
-		for i, k in ipairs(skeleton_mage_order) do
+		for i, k in ipairs(lich_order) do
 			if c[k] then
-				chancelist:add(true,skeleton_mage_list[k].name:capitalize(),(": %d%%"):format(c[k]))
+				chancelist:add(true,lich_list[k].name:capitalize(),(": %d%%"):format(c[k]))
 			end
 		end
 		return chancelist:toString()
@@ -630,7 +473,7 @@ newTalent{
 	action = function(self, t)
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
-		if trueNecroGetNbSummon(self,"mage") < nb then
+		if trueNecroGetNbSummon(self,"lich") < nb then
 			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
@@ -645,7 +488,7 @@ newTalent{
 				end
 			end)
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
-			local minion = summonSkeletonMage(self, self:getTalentLevel(t))
+			local minion = summonLich(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
 			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
@@ -665,20 +508,9 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising an undead mage to do your bidding. You can control up to %d mages. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Fires powerful undead energies through your necrotic aura, coercing a lich to accompany you. You can control up to %d liches. The minion will be raised within a cone that extends to the edge of your necrotic aura.
 		The minion's level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
 		format(nb, lev, mm, t.MinionChancesDesc(self, t))
-	end,
-}
-
-newTalent{
-	name = "Skeleton Mastery",
-	type = {"spell/skeletal-minions",4},
-	require = spells_req4,
-	points = 5,
-	mode = "passive",
-	info = function(self, t)
-		return ([[Increases the quality of your minions.]])
 	end,
 }

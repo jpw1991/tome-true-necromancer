@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Necromancer spells
+-- True Necromancer spells
 newTalentType {
   allow_random=true,
   no_silence=true,
@@ -45,7 +45,17 @@ newTalentType {
   mana_regen=true,
   type="spell/fleshy-minions",
   name = "fleshy minions",
-  description = "Create fleshy minions."
+  description = "Create fleshy undead minions and constructs."
+}
+
+newTalentType {
+  allow_random=true,
+  no_silence=true,
+  is_spell=true,
+  mana_regen=true,
+  type="spell/terrifying-minions",
+  name = "terrifying minions",
+  description = "Create advanced undead minions."
 }
 
 -------------------------------------------
@@ -59,10 +69,8 @@ function trueNecroGetNbSummon(self, minion_type)
 	for act, def in pairs(game.party.members) do
 		if act.summoner and act.summoner == self and act.necrotic_minion and act.minion_type == minion_type then
       nb = nb + 1
-      --game.logSeen(self, ("Minion type: %s"):format(act.minion_type))
     end
 	end
-  --game.logSeen(self, ("NB: %d, Minion type: %s"):format(nb, minion_type))
 	return nb
 end
 
@@ -95,12 +103,11 @@ function applyDarkEmpathy(self, m)
 	end
 end
 
-function necroSetupSummon(self, m, x, y, level, no_control, no_decay)--, minion_type)
+function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 	m.faction = self.faction
 	m.summoner = self
 	m.summoner_gain_exp = true
 	m.necrotic_minion = true
-  --m.minion_type = minion_type
 	m.exp_worth = 0
 	m.life_regen = 0
 	m.unused_stats = 0
@@ -196,3 +203,4 @@ end
 load("/data-truenecromancer/talents/spells/dark-mastery.lua")
 load("/data-truenecromancer/talents/spells/skeletal-minions.lua")
 load("/data-truenecromancer/talents/spells/fleshy-minions.lua")
+load("/data-truenecromancer/talents/spells/terrifying-minions.lua")
