@@ -425,18 +425,11 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
-		return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_SKELETON_WARRIORS)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
-		if not p then return end
-		return true
 	end,
 	getMax = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -458,7 +451,6 @@ newTalent{
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
 		if trueNecroGetNbSummon(self,"warrior") < nb then
-			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
 			-- Summon minions in a cone
@@ -474,10 +466,9 @@ newTalent{
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 			local minion = summonSkeletonWarrior(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
+				necroSetupSummon(self, minion, pos.x, pos.y, lev)
 			end
 
 			local empower = necroEssenceDead(self)
@@ -493,10 +484,10 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising a long dead warrior to do your bidding. You can control up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Expend one of your captured souls to raise a long dead warrior to do your bidding. You can control up to %d warriors. The minion will be raised within a cone with a range of %d.
 		The minions level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
-		format(nb, lev, mm, t.MinionChancesDesc(self, t))
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 
@@ -512,18 +503,11 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
-		return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_SKELETON_ARCHERS)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
-		if not p then return end
-		return true
 	end,
 	getMax = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -545,7 +529,6 @@ newTalent{
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
 		if trueNecroGetNbSummon(self,"archer") < nb then
-			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
 			-- Summon minions in a cone
@@ -561,10 +544,9 @@ newTalent{
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 			local minion = summonSkeletonArcher(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
+				necroSetupSummon(self, minion, pos.x, pos.y, lev)
 			end
 
 			local empower = necroEssenceDead(self)
@@ -579,10 +561,10 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising a long dead marksman to do your bidding. You can control up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Expend one of your captured souls to raise a long dead marksman to do your bidding. You can control up to %d archers. The minion will be raised within a cone with a range of %d.
 		The minion's level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
-		format(nb, lev, mm, t.MinionChancesDesc(self, t))
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 
@@ -598,18 +580,11 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
-		return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_SKELETON_MAGES)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
-		if not p then return end
-		return true
 	end,
 	getMax = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -631,7 +606,6 @@ newTalent{
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
 		if trueNecroGetNbSummon(self,"mage") < nb then
-			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
 			-- Summon minions in a cone
@@ -647,10 +621,9 @@ newTalent{
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 			local minion = summonSkeletonMage(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
+				necroSetupSummon(self, minion, pos.x, pos.y, lev)
 			end
 
 			local empower = necroEssenceDead(self)
@@ -665,10 +638,10 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising an undead mage to do your bidding. You can control up to %d mages. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Expend one of your captured souls, raising an undead mage to do your bidding. You can control up to %d mages. The minions will be raised within a cone with a range of %d.
 		The minion's level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
-		format(nb, lev, mm, t.MinionChancesDesc(self, t))
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 

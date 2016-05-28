@@ -2964,6 +2964,7 @@ function _M:die(src, death_note)
 	end
 
 	-- Increases necrotic aura count
+	--[[
 	if src and src.resolveSource and src:resolveSource().isTalentActive and (src:resolveSource():isTalentActive(src.T_NECROTIC_AURA) or src:resolveSource():isTalentActive(src.T_TRUE_NECROTIC_AURA)) and not self.necrotic_minion and not self.no_necrotic_soul then
 		local rsrc = src:resolveSource()
 		local p = rsrc:isTalentActive(src.T_NECROTIC_AURA)
@@ -2976,6 +2977,24 @@ function _M:die(src, death_note)
 			end
 			rsrc.changed = true
 		end
+	end
+	--]]
+	if src and src.resolveSource and src:resolveSource().isTalentActive and src:resolveSource():isTalentActive(src.T_NECROTIC_AURA) and not self.necrotic_minion and not self.no_necrotic_soul then
+		local rsrc = src:resolveSource()
+		local p = rsrc:isTalentActive(src.T_NECROTIC_AURA)
+		if self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, rsrc.x, rsrc.y) <= rsrc.necrotic_aura_radius then
+			rsrc:incSoul(1)
+			if rsrc:attr("extra_soul_chance") and rng.percent(rsrc:attr("extra_soul_chance")) then
+				rsrc:incSoul(1)
+				game.logPlayer(rsrc, "%s rips more animus from its victim. (+1 more soul)", rsrc.name:capitalize())
+			end
+			rsrc.changed = true
+		end
+	elseif src and src.resolveSource and src.knowTalent and src:knowTalent(src.T_SOUL_POOL) and not self.necrotic_minion and not self.no_necrotic_soul then
+		-- any death grants a true necro a soul
+		local rsrc = src:resolveSource()
+		rsrc:incSoul(1)
+		rsrc.changed = true
 	end
 
 	-- handle hate changes on kill

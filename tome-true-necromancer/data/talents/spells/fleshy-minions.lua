@@ -394,18 +394,13 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
-		return aura.getRadius(self, aura)
+		--local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
+		--return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_GHOULS)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
-		if not p then return end
-		return true
 	end,
 	getMax = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -427,7 +422,6 @@ newTalent{
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t) - trueNecroGetNbSummon(self, "ghoul")
 		if trueNecroGetNbSummon(self,"ghoul") < nb then
-			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
 			-- Summon minions in a cone
@@ -444,10 +438,9 @@ newTalent{
 			for i = 1, nb do
 				local minion = summonGhoul(self, self:getTalentLevel(t))
 				local pos = rng.tableRemove(possible_spots)
-				local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 				if minion and pos then
 					if use_ressource then self:incSoul(-1) end
-					necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
+					necroSetupSummon(self, minion, pos.x, pos.y, lev)
 				end
 		  end
 
@@ -464,10 +457,10 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_FLESHY_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising a pack of ghouls to command. You can control up to %d ghouls. The minions will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Expend the captured souls of your enemies to raise a pack of ghouls to command. You can control up to %d ghouls. The minions will be raised within a cone with a range of %d.
 		The minion level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
-		format(nb, lev, mm, t.MinionChancesDesc(self, t))
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 
@@ -482,18 +475,13 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
-		return aura.getRadius(self, aura)
+		--local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
+		--return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_VAMPIRES)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
-		if not p then return end
-		return true
 	end,
 	getMax = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -515,7 +503,6 @@ newTalent{
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t) - trueNecroGetNbSummon(self, "vampire")
 		if trueNecroGetNbSummon(self,"vampire") < nb then
-			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
 			-- Summon minions in a cone
@@ -532,10 +519,9 @@ newTalent{
 			for i = 1, nb do
 				local minion = summonVampire(self, self:getTalentLevel(t))
 				local pos = rng.tableRemove(possible_spots)
-				local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 				if minion and pos then
 					if use_ressource then self:incSoul(-1) end
-					necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
+					necroSetupSummon(self, minion, pos.x, pos.y, lev)
 				end
 		  end
 
@@ -552,10 +538,10 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_FLESHY_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising a pack of vampires to command. You can control up to %d vampires. The minions will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Expend the captured souls of your enemies to raise a group of vampires to command. You can control up to %d vampires. The minions will be raised within a cone with a range of %d.
 		The minion level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
-		format(nb, lev, mm, t.MinionChancesDesc(self, t))
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 

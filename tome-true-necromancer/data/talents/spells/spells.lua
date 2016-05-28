@@ -47,7 +47,7 @@ newTalentType {
   name = "fleshy minions",
   description = "Create fleshy undead minions and constructs."
 }
-
+--[[
 newTalentType {
   allow_random=true,
   no_silence=true,
@@ -57,6 +57,7 @@ newTalentType {
   name = "terrifying minions",
   description = "Create advanced undead minions."
 }
+--]]
 
 newTalentType {
   allow_random=true,
@@ -113,7 +114,7 @@ function applyConsiderateMinions(self, m)
 	end
 end
 
-function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
+function necroSetupSummon(self, m, x, y, level, no_control)
 	m.faction = self.faction
 	m.summoner = self
 	m.summoner_gain_exp = true
@@ -153,42 +154,15 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 	game.zone:addEntity(game.level, m, "actor", x, y)
 	game.level.map:particleEmitter(x, y, 1, "summon")
 
-
-	-- Summons decay
-	if not no_decay then
-		m.necrotic_aura_decaying = self.true_necrotic_aura_decay
-		m.on_act = function(self)
-			local src = self.summoner
-			if src and self.necrotic_aura_decaying and self.x and self.y and not src.dead and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= (src.true_necrotic_aura_radius or 0) then return end
-
-			self.life = self.life - self.max_life * (self.necrotic_aura_decaying or 10) / 100
-			self.changed = true
-			if self.life <= 0 then
-				game.logSeen(self, "#{bold}#%s decays into a pile of ash!#{normal}#", self.name:capitalize())
-				if src then
-					local t = src:getTalentFromId(src.T_TRUE_NECROTIC_AURA)
-					t.die_speach(self, t)
-				end
-				self:die(self)
-			end
-		end
-	end
-
-
 	m.on_die = function(self, killer)
 		local src = self.summoner
-		local w = src:isTalentActive(src.T_WILL_O__THE_WISP)
-		local p = src:isTalentActive(src.T_TRUE_NECROTIC_AURA)
-    -- restore the soul if dies within aura
-    if p and core.fov.distance(self.x, self.y, src.x, src.y) >= (src.true_necrotic_aura_radius or 0) then
-      src:incSoul(1)
+
+    -- chance that the soul is returned to the true necromancer
+    local refund_chance = src:getTalentLevelRaw(src.T_SOUL_RESERVE)
+    local random_number = math.random(1, 100)
+    if random_number <= refund_chance then
+      src.incSoul(1)
     end
-
-		if not w or not p or not self.x or not self.y or not src.x or not src.y or core.fov.distance(self.x, self.y, src.x, src.y) > self.summoner.true_necrotic_aura_radius then return end
-		if not rng.percent(w.chance) then return end
-
-		local t = src:getTalentFromId(src.T_WILL_O__THE_WISP)
-		t.summon(src, t, w.dam, self, killer)
 	end
 
 	-- Summons never flee
@@ -213,5 +187,5 @@ end
 load("/data-truenecromancer/talents/spells/dark-mastery.lua")
 load("/data-truenecromancer/talents/spells/skeletal-minions.lua")
 load("/data-truenecromancer/talents/spells/fleshy-minions.lua")
-load("/data-truenecromancer/talents/spells/terrifying-minions.lua")
+--load("/data-truenecromancer/talents/spells/terrifying-minions.lua")
 load("/data-truenecromancer/talents/spells/dark-utility.lua")

@@ -68,8 +68,9 @@ newBirthDescriptor{
 		end,
 	},
 	talents = {
-		[ActorTalents.T_MINION_STRENGTH] = 1,
-		[ActorTalents.T_TRUE_NECROTIC_AURA] = 1,
+		[ActorTalents.T_SOUL_POOL] = 1,
+		[ActorTalents.T_MINION_STRENGTH] = 2,
+		--[ActorTalents.T_TRUE_NECROTIC_AURA] = 1,
 		[ActorTalents.T_SUMMON_SKELETON_WARRIORS] = 2,
 		[ActorTalents.T_ARCANE_EYE] = 1,
 		--[ActorTalents.T_INVOKE_DARKNESS] = 1,
