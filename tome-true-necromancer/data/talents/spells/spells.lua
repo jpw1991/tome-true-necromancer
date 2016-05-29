@@ -114,6 +114,14 @@ function applyConsiderateMinions(self, m)
 	end
 end
 
+function applyMinionResistance(self, m)
+  if self:knowTalent(self.T_MINION_RESISTANCE) then
+    local t = self:getTalentFromId(self.T_MINION_RESISTANCE)
+		local percent = t.getPercent(self, t)
+    m.resists["all"] = percent
+  end
+end
+
 function necroSetupSummon(self, m, x, y, level, no_control)
 	m.faction = self.faction
 	m.summoner = self
@@ -136,6 +144,7 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 	m.no_drops = true
 
 	applyConsiderateMinions(self, m)
+  applyMinionResistance(self, m)
 
 	if game.party:hasMember(self) then
 		local can_control = not no_control

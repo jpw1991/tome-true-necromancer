@@ -24,15 +24,30 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
-		return ([[Increases the quality of your minions by increasing their level by %%d.]]):
+		return ([[Increases the quality of your minions by increasing their level by %d.]]):
 		format(self:getTalentLevelRaw(t))
 	end,
 }
 
 newTalent{
-	name = "Soul Reserve",
+	name = "Minion Resistance",
 	type = {"spell/dark-mastery",2},
 	require = spells_req2,
+	points = 5,
+	mode = "passive",
+	getPercent = function(self, t)
+		return self:getTalentLevelRaw(t)*10
+	end,
+	info = function(self, t)
+		return ([[Increases the resistances of your minions to all elements by %d%%.]]):
+		format(t.getPercent(self,t))
+	end,
+}
+
+newTalent{
+	name = "Soul Reserve",
+	type = {"spell/dark-mastery",3},
+	require = spells_req3,
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
@@ -49,8 +64,8 @@ newTalent{
 
 newTalent{
 	name = "Dark Sacrifice",
-	type = {"spell/dark-mastery", 3},
-	require = spells_req3,
+	type = {"spell/dark-mastery", 4},
+	require = spells_req4,
 	points = 5,
 	mana = 25,
 	cooldown = 6,
