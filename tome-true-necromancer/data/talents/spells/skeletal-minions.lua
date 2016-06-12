@@ -222,6 +222,41 @@ local skeleton_mage_list = {
 		autolevel = "caster",
 		ai_state = { talent_in=1, },
 	},
+	skel_magus = {
+		type = "undead", subtype = "skeleton",
+		name = "skeleton magus", color=colors.LIGHT_RED, --, image="npc/skeleton_mage.png",
+		blood_color = colors.GREY,
+		display = "s",
+		combat = { dam=1, atk=1, apr=1 },
+		level_range = {1, nil}, exp_worth = 0,
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+		infravision = 10,
+		rank = 2,
+		size_category = 3,
+		autolevel = "warrior",
+		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
+		stats = { str=14, dex=12, mag=10, con=12 },
+		resolvers.racial(),
+		resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
+		open_door = true,
+		cut_immune = 1,
+		blind_immune = 1,
+		fear_immune = 1,
+		poison_immune = 1,
+		see_invisible = 2,
+		undead = 1,
+		rarity = 1,
+
+		max_life = resolvers.rngavg(50,60),
+		max_mana = resolvers.rngavg(70,80),
+		combat_armor = 3, combat_def = 1,
+		stats = { str=10, dex=12, cun=16, mag=18, con=10 },
+		resolvers.talents{ T_STAFF_MASTERY={base=2, every=10, max=5}, T_FLAME={base=1, every=7, max=5}, T_MANATHRUST={base=2, every=7, max=5}, T_ARCANE_POWER={base=2, every=7, max=5} },
+		blighted_summon_talent = "T_BONE_SPEAR",
+		resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+		autolevel = "caster",
+		ai_state = { talent_in=1, },
+	},
 }
 
 local lich_list = {
@@ -339,7 +374,21 @@ local function getSkeletonArcherChances(self)
 end
 
 local function getSkeletonMageChances(self)
-	return { skel_mage=100 }
+	local quality = math.floor(self:getTalentLevel(self.T_SKELETON_MASTERY))
+	if quality == 2 then
+		return { skel_mage=80, skel_magus=20 }
+	elseif quality == 3 then
+		return { skel_mage=60, skel_magus=40 }
+	elseif quality == 4 then
+		return { skel_mage=40, skel_magus=60 }
+	elseif quality == 5 then
+		return { skel_mage=20, skel_magus=80 }
+	elseif quality == 6 then
+		return { skel_mage=0, skel_magus=100 }
+	else
+		-- level 1 or 0
+	  return { skel_mage=100, skel_magus=0 }
+	end
 end
 
 local function getLichChances(self)
