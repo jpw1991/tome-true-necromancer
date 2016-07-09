@@ -33,9 +33,8 @@ These talents categories are replaced by the following ones:
 | --- | --- | --- | --- | --- | --- | --- |
 | Spell | Skeletal Minions | No | Summon Skeleton Warrior | Summon Skeleton Archer | Summon Skeleton Mage | Skeleton Mastery |
 | Spell | Fleshy Minions | No | Summon Ghouls | Summon Vampires | Summon Golem | Fleshy Mastery |
-| Spell | Dark Mastery | No | Minion Strength | True Aura Mastery | Soul Reserve | Dark Sacrifice |
-| Spell | Terrifying Minions | Yes | Summon Wight | Summon Dread | Summon Lich |  |
-| Spell | Dark Utility | Yes | Dark Recall | Minion Explosion | Necrotic Frenzy | Considerate Minions |
+| Spell | Dark Mastery | No | Minion Strength | Minion Resistance | Soul Reserve | Dark Sacrifice |
+| Spell | Dark Utility | Yes | Considerate Minions | Dark Recall | Necrotic Frenzy | Detonate Minions |
 
 Skeleton minions tend to be of a higher quality than fleshy minions, but can only be summoned one at a time. Fleshy minions tend to be of a lower quality than skeleton minions, but they're cheaper and can be summoned in bulk.
 
@@ -43,22 +42,22 @@ Talent descriptions:
 
 | Category | Talent | Description |
 | --- | --- | --- |
-| Skeletal Minions | Summon Skeleton Warriors | Summons a skeleton warrior (warrior capacity raised by each level). |
-|  | Summon Skeleton Archers | Summon a skeleton archer (archer capacity raised by each level). |
-|  | Summon Skeleton Mages | Summon a skeleton mage (mage capacity raised by each level). |
+| Skeletal Minions | Summon Skeleton Warrior | Summons a skeleton warrior (warrior minion limit and level raised by each level). |
+|  | Summon Skeleton Archer | Summon a skeleton archer (archer minion limit and level raised by each level). |
+|  | Summon Skeleton Mages | Summon a skeleton mage (mage minion limit and level raised by each level). |
 |  | Skeleton Mastery | Improves the quality of skeleton minions. |
-| Fleshy Minions | Summon Ghoul | Summon a ghoul (ghoul capacity raised by each level). |
-|  | Summon Vampires | Summon a vampire (vampire capacity raised by each level). |
+| Fleshy Minions | Summon Ghoul | Summons ghouls (ghoul minion limit and level raised by each level). |
+|  | Summon Vampires | Summons vampires (vampire minion limit and level raised by each level). |
 |  | Summon Golem | Summon a bone golem (maximum of two at top level). Requires no souls, only mana. |
-|  | Fleshy Mastery | Improves the quality and quantity of fleshy minions summoned (Quantity raised by 1 per level). |
+|  | Fleshy Mastery | Improves the quality of fleshy minions summoned. |
 | Dark Mastery | Minion Strength | Improves the level of the minions summoned by all True Necromancer summoning abilities. |
-|  | True Aura Mastery | Improves the radius of the True Necrotic Aura. At max level this allows minions to survive even when outside the aura. Increases the chance of being refunded a soul when a minion dies within the aura by 15% per level. |
-|  | Soul Reserve | Increases soul capacity by 5 per level. |
+|  | Minion Resistance | Each level improves all the resistances of your minions by 10%. |
+|  | Soul Reserve | Increases soul capacity by 5 per level, adds a 15% chance of a soul being refunded to you when a minion dies per level. |
 |  | Dark Sacrifice | A portion of the caster's life is sacrificed to generate a soul, starting at 75% at level 1 and ending at 25% at max level. |
-| Dark Utility | Dark Recall | The necromancer's Shadow Tunnel ability, just renamed and put in this category. |
-|  | Minion Explosion | The necromancer's Undead Explosion ability, just renamed and put in this category. |
+| Dark Utility | Considerate Minions | The necromancer's Dark Empathy ability, just renamed and put in this category BUT with the following difference: Friendly fire protection extends to minions themselves too (no more friendly fire from mages). |
+|  | Dark Recall | The necromancer's Shadow Tunnel ability, just renamed and put in this category. |
 |  | Necrotic Frenzy | The necromancer's Surge of Undeath ability, just renamed and put in this category. |
-|  | Considerate Minions | The necromancer's Dark Empathy ability, just renamed and put in this category BUT with the following difference: Friendly fire protection extends to minions themselves too (no more friendly fire from mages). |
+|  | Minion Explosion | The necromancer's Undead Explosion ability, just renamed and put in this category. |
 
 ## Inspiration for the mod
 I feel like there hasn't been a truly satisfying summoning experience in a game since Diablo 2.

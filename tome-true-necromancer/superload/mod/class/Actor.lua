@@ -2964,41 +2964,10 @@ function _M:die(src, death_note)
 	end
 
 	-- Increases necrotic aura count
-	--[[
-	if src and src.resolveSource and src:resolveSource().isTalentActive and (src:resolveSource():isTalentActive(src.T_NECROTIC_AURA) or src:resolveSource():isTalentActive(src.T_TRUE_NECROTIC_AURA)) and not self.necrotic_minion and not self.no_necrotic_soul then
-		local rsrc = src:resolveSource()
-		local p = rsrc:isTalentActive(src.T_NECROTIC_AURA)
-		local necrotic_aura_radius = src:resolveSource():isTalentActive(src.T_NECROTIC_AURA) and rsrc.necrotic_aura_radius or rsrc.true_necrotic_aura_radius
-		if self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, rsrc.x, rsrc.y) <= necrotic_aura_radius then
-			rsrc:incSoul(1)
-			if rsrc:attr("extra_soul_chance") and rng.percent(rsrc:attr("extra_soul_chance")) then
-				rsrc:incSoul(1)
-				game.logPlayer(rsrc, "%s rips more animus from its victim. (+1 more soul)", rsrc.name:capitalize())
-			end
-			rsrc.changed = true
-		end
-	end
-	--]]
-	--[[
-	if src and src.resolveSource and src:resolveSource().isTalentActive and src:resolveSource():isTalentActive(src.T_NECROTIC_AURA) and not self.necrotic_minion and not self.no_necrotic_soul then
-		local rsrc = src:resolveSource()
-		local p = rsrc:isTalentActive(src.T_NECROTIC_AURA)
-		if self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, rsrc.x, rsrc.y) <= rsrc.necrotic_aura_radius then
-			rsrc:incSoul(1)
-			if rsrc:attr("extra_soul_chance") and rng.percent(rsrc:attr("extra_soul_chance")) then
-				rsrc:incSoul(1)
-				game.logPlayer(rsrc, "%s rips more animus from its victim. (+1 more soul)", rsrc.name:capitalize())
-			end
-			rsrc.changed = true
-		end
-	--]]
-	game.log("a creature dies...")
 	if src and src.resolveSource and src.knowTalent and not self.necrotic_minion and not self.no_necrotic_soul then
 		-- any death grants a true necro a soul
-		game.log("... and we are this far")
 		local rsrc = src:resolveSource()
 		if rsrc:knowTalent(src.T_SOUL_POOL) then
-			game.log("... and a soul is granted")
 		  rsrc:incSoul(1)
 		  rsrc.changed = true
 	  end

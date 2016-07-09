@@ -49,7 +49,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Rune: Shielding",
+	name = "Soul Shield",
 	type = {"spell/soul-manipulation", 2},
 	require = spells_req2,
 	points = 5,
@@ -74,3 +74,5 @@ newTalent{
 		return ([[absorb %d for %d turns]]):format(data.power + data.inc_stat, data.dur)
 	end,
 }
+
+-- to do: 2 more talents
