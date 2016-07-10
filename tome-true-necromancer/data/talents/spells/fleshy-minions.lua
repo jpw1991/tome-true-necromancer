@@ -107,6 +107,95 @@ local ghoul_list = {
 	},
 }
 
+local mummy_list = {
+	crumbling_mummy = {
+		type = "undead", subtype = "mummy",
+		name = "crumbling mummy", color=colors.LIGHT_RED, image="/data/gfx/shockbolt/npc/undead_mummy_greater_mummy_lord.png",
+		blood_color = colors.GREY,
+		display = "Z",
+		combat = { dam=1, atk=1, apr=1 },
+		level_range = {1, nil}, exp_worth = 0,
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+		autolevel = "warrior",
+		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
+		global_speed_base = 0.8,
+		stats = { str=14, dex=10, mag=10, con=14 },
+		resolvers.racial("shalore"),
+		open_door = true,
+		cut_immune = 1,
+		blind_immune = 1,
+		poison_immune = 1,
+		fear_immune = 1,
+		see_invisible = 2,
+		undead = 1,
+		rank = 2,
+		resolvers.inscriptions(1, "rune"),
+		resolvers.tmasteries{ ["technique/2hweapon-offense"]=1, ["technique/2hweapon-cripple"]=1, },
+	},
+	mummy = {
+		type = "undead", subtype = "mummy",
+		name = "mummy", color=colors.LIGHT_RED, image="/data/gfx/shockbolt/npc/undead_mummy_greater_mummy_lord.png",
+		blood_color = colors.GREY,
+		display = "Z",
+		combat = { dam=1, atk=1, apr=1 },
+		level_range = {1, nil}, exp_worth = 0,
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+		autolevel = "warrior",
+		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
+		global_speed_base = 0.8,
+		stats = { str=16, dex=10, mag=10, con=16, wil=16 },
+		resolvers.racial("shalore"),
+		open_door = true,
+		cut_immune = 1,
+		blind_immune = 1,
+		poison_immune = 1,
+		fear_immune = 1,
+		see_invisible = 2,
+		life_regen = 2,
+		undead = 1,
+		rank = 2,
+		hate_regen = 2,
+		resolvers.inscriptions(1, "rune"),
+		resolvers.tmasteries{ ["technique/2hweapon-offense"]=1, ["technique/2hweapon-cripple"]=1, },
+		resolvers.talents{
+			T_WILLFUL_STRIKE=2,
+		},
+	},
+	well_preserved_mummy = {
+		type = "undead", subtype = "mummy",
+		name = "well preserved mummy", color=colors.LIGHT_RED, image="/data/gfx/shockbolt/npc/undead_mummy_greater_mummy_lord.png",
+		blood_color = colors.GREY,
+		display = "Z",
+		combat = { dam=1, atk=1, apr=1 },
+		level_range = {1, nil}, exp_worth = 0,
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+		autolevel = "warrior",
+		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
+		global_speed_base = 1,
+		stats = { str=18, dex=10, mag=10, con=18, cun=16, wil=20 },
+		resolvers.racial("shalore"),
+		open_door = true,
+		cut_immune = 1,
+		blind_immune = 1,
+		poison_immune = 1,
+		fear_immune = 1,
+		see_invisible = 2,
+		life_regen = 4,
+		undead = 1,
+		rank = 2,
+		hate_regen = 2,
+		resolvers.inscriptions(1, "rune"),
+		resolvers.tmasteries{ ["technique/2hweapon-offense"]=1, ["technique/2hweapon-cripple"]=1, },
+		resolvers.talents{
+			T_CALL_SHADOWS=3,
+			T_FOCUS_SHADOWS=3,
+			T_SHADOW_MAGES=1,
+			T_SHADOW_WARRIORS=1,
+			T_WILLFUL_STRIKE=4,
+		},
+	}
+}
+
 local vampire_list = {
 	vampire = {
 		type = "undead", subtype = "vampire",
@@ -326,6 +415,7 @@ local golem_list = {
 
 local ghoul_order = {"ghoul", "ghast", "ghoulking"} -- Sets listing order
 local vampire_order = {"vampire", "m_vampire"}
+local mummy_order = {"crumbling_mummy", "mummy", "well_preserved_mummy"}
 
 local function getGhoulChances(self)
   local quality = math.floor(self:getTalentLevel(self.T_FLESHY_MASTERY))
@@ -347,6 +437,24 @@ end
 
 local function getVampireChances(self)
 	return { vampire=50, m_vampire=50 }
+end
+
+local function getMummyChances(self)
+  local quality = math.floor(self:getTalentLevel(self.T_FLESHY_MASTERY))
+	if quality == 2 then
+		return { crumbling_mummy=50, mummy=50, well_preserved_mummy=0 }
+	elseif quality == 3 then
+		return { crumbling_mummy=25, mummy=50, well_preserved_mummy=25 }
+	elseif quality == 4 then
+		return { crumbling_mummy=25, mummy=25, well_preserved_mummy=50 }
+	elseif quality == 5 then
+		return { crumbling_mummy=15, mummy=20, well_preserved_mummy=65 }
+	elseif quality == 6 then
+		return { crumbling_mummy=0, mummy=0, well_preserved_mummy=100 }
+	else
+		-- level 1 or 0
+		return { crumbling_mummy=80, mummy=20, well_preserved_mummy=0 }
+	end
 end
 
 local function summonGhoul(self, lev)
@@ -380,6 +488,23 @@ local function summonVampire(self, lev)
 	m = require("mod.class.NPC").new(vampire_list[m])
 	m.necrotic_minion = true
 	m.minion_type = "vampire"
+	return m
+end
+
+local function summonMummy(self, lev)
+	local chances = getMummyChances(self)
+	local pick = rng.float(0,100)
+	local tot, m = 0
+	for k, e in pairs(chances) do
+		tot = tot + e
+		if tot > pick then
+			m = k
+			break
+		end
+	end
+	m = require("mod.class.NPC").new(mummy_list[m])
+	m.necrotic_minion = true
+	m.minion_type = "mummy"
 	return m
 end
 
@@ -464,6 +589,7 @@ newTalent{
 	end,
 }
 
+--[[
 newTalent{
 	name = "Summon Vampires",
 	type = {"spell/fleshy-minions",2},
@@ -540,15 +666,15 @@ newTalent{
 		local mm = self:knowTalent(self.T_FLESHY_MASTERY) and " (Minion Strength effects included)" or ""
 		return ([[Expend the captured souls of your enemies to raise a group of vampires to command. You can control up to %d vampires. The minions will be raised within a cone with a range of %d.
 		The minion level is your level %+d.
-		Each minion has a chance to be%s:%s]]):
+		Each minion has a chance to be%s:%s]--]):
 		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
-}
+}--]]
 
 newTalent{
 	name = "Bone Golem",
-	type = {"spell/fleshy-minions",3},
-	require = spells_req3,
+	type = {"spell/fleshy-minions",2},
+	require = spells_req2,
 	points = 5,
 	mana = 90,
 	cooldown = 25,
@@ -585,6 +711,87 @@ newTalent{
 		At level 6, it has a 20%% chance to produce a runed bone giant.
 		A max of %s can be active at any time.]]):
 		format(t.getMax(self, t))
+	end,
+}
+
+newTalent{
+	name = "Summon Mummies",
+	type = {"spell/fleshy-minions",3},
+	require = spells_req3,
+	points = 5,
+	fake_ressource = true,
+	mana = 20,
+	cooldown = 14,
+	tactical = { ATTACK = 10 },
+	requires_target = true,
+	range = 0,
+	radius = function(self, t)
+		--local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
+		--return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_MUMMIES)
+	end,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getMax = function(self, t)
+		return math.floor(self:getTalentLevel(t))
+	end,
+	getLevel = function(self, t)
+		return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) + math.floor(self:getTalentLevel(self.T_MINION_STRENGTH))
+	end, -- -6 @ 1, +2 @ 5, +5 @ 8 + the minion strength
+	MinionChancesDesc = function(self)
+		local c = getMummyChances(self)
+		local chancelist = tstring({})
+		for i, k in ipairs(mummy_order) do
+			if c[k] then
+				chancelist:add(true,mummy_list[k].name:capitalize(),(": %d%%"):format(c[k]))
+			end
+		end
+		return chancelist:toString()
+	end,
+	action = function(self, t)
+		-- only allow the summon if we haven't exceeded the limit
+		local nb = t.getMax(self, t) - trueNecroGetNbSummon(self, "mummy")
+		if trueNecroGetNbSummon(self,"mummy") < nb then
+			local lev = t.getLevel(self, t)
+
+			-- Summon minions in a cone
+			local tg = self:getTalentTarget(t)
+			local x, y = self:getTarget(tg)
+			if not x or not y then return nil end
+			local possible_spots = {}
+			self:project(tg, x, y, function(px, py)
+				if not game.level.map:checkAllEntities(px, py, "block_move") then
+					possible_spots[#possible_spots+1] = {x=px, y=py}
+				end
+			end)
+			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
+			for i = 1, nb do
+				local minion = summonMummy(self, self:getTalentLevel(t))
+				local pos = rng.tableRemove(possible_spots)
+				if minion and pos then
+					if use_ressource then self:incSoul(-1) end
+					necroSetupSummon(self, minion, pos.x, pos.y, lev)
+				end
+		  end
+
+			local empower = necroEssenceDead(self)
+			if empower then empower() end
+
+			if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
+			game:playSoundNear(self, "talents/spell_generic2")
+	  end
+
+		return true
+	end,
+	info = function(self, t)
+		local nb = t.getMax(self, t)
+		local lev = t.getLevel(self, t)
+		local mm = self:knowTalent(self.T_FLESHY_MASTERY) and " (Minion Strength effects included)" or ""
+		return ([[Expend the captured souls of your enemies to raise a group of mummies to command. You can control up to %d mummies. The minions will be raised within a cone with a range of %d.
+		The minion level is your level %+d.
+		Each minion has a chance to be%s:%s]]):
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 
