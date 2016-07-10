@@ -222,85 +222,46 @@ local skeleton_mage_list = {
 		autolevel = "caster",
 		ai_state = { talent_in=1, },
 	},
-}
-
-local lich_list = {
-	lich = {
-		type = "undead", subtype = "lich",
-		display = "L",
-		rank = 3, size = 3,
-		combat = { dam=resolvers.rngavg(16,27), atk=16, apr=9, damtype=DamageType.DARKSTUN, dammod={mag=0.9} },
-		body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1},
-		equipment = resolvers.equip{
-			{type="armor", subtype="cloth", ego_chance=75, autoreq=true},
-			{type="armor", subtype="head", ego_chance=75, autoreq=true},
-			{type="armor", subtype="feet", ego_chance=75, autoreq=true},
-			{type="armor", subtype="cloak", ego_chance=75, autoreq=true},
-			{type="jewelry", subtype="amulet", ego_chance=100, autoreq=true},
-			{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
-			{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
-		},
-		autolevel = "caster",
-		ai = "tactical", ai_state = { talent_in=1, },
-		ai_tactic = resolvers.tactic"ranged",
-		stats = { str=8, dex=15, mag=20, wil=18, con=10, cun=18 },
-		resists = { [DamageType.NATURE] = 90, [DamageType.FIRE] = 20, [DamageType.MIND] = 100, [DamageType.LIGHT] = -60, [DamageType.DARKNESS] = 95, [DamageType.BLIGHT] = 90 },
-		resolvers.inscriptions(3, "rune"),
-		instakill_immune = 1,
-		stun_immune = 1,
-		poison_immune = 1,
-		undead = 1,
-		blind_immune = 1,
-		see_invisible = 100,
-		infravision = 10,
-		silence_immune = 0.7,
-		fear_immune = 1,
-		negative_regen = 0.4,	-- make their negative energies slowly increase
-		mana_regen = 0.3,
-		hate_regen = 2,
-		open_door = 1,
-		combat_spellpower = resolvers.mbonus(20, 10),
-		combat_spellcrit = resolvers.mbonus(5, 5),
-		resolvers.sustains_at_birth(),
-		name = "lich", color=colors.DARK_BLUE,
-		desc=[[Having thought to discover life eternal, these beings have allowed undeath to rob them of the joys of life. Now they seek to destroy it as well.]],
-		resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_lich_lich.png", display_h=2, display_y=-1}}},
+	skel_magus = {
+		type = "undead", subtype = "skeleton",
+		name = "skeleton magus", color=colors.LIGHT_RED, --, image="npc/skeleton_mage.png",
+		blood_color = colors.GREY,
+		display = "s",
+		combat = { dam=1, atk=1, apr=1 },
 		level_range = {1, nil}, exp_worth = 0,
-		rarity = 20,
-		max_life = resolvers.rngavg(70,80),
-		combat_armor = 10, combat_def = 20,
-		resolvers.talents{
-			T_HYMN_OF_SHADOWS=4,
-			T_MOONLIGHT_RAY=5,
-			T_SHADOW_BLAST=5,
-			T_TWILIGHT_SURGE=3,
-			T_STARFALL=3,
-			T_FREEZE=3,
-			T_MANATHRUST=5,
-			T_CONGEAL_TIME=5,
---			T_CREEPING_DARKNESS=4,
-			T_DARK_VISION=4,
-			T_DARK_TORRENT=4,
---			T_DARK_TENDRILS=4,
-			T_BONE_GRAB=4,
-			T_BONE_SPEAR=4,
-			-- Utility spells
-			T_PHASE_DOOR=5,
-			T_TELEPORT=5,
-			T_STONE_SKIN=5,
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+		infravision = 10,
+		rank = 2,
+		size_category = 3,
+		autolevel = "warrior",
+		ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
+		stats = { str=14, dex=12, mag=10, con=12 },
+		resolvers.racial(),
+		resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
+		open_door = true,
+		cut_immune = 1,
+		blind_immune = 1,
+		fear_immune = 1,
+		poison_immune = 1,
+		see_invisible = 2,
+		undead = 1,
+		rarity = 1,
 
-			T_CALL_SHADOWS=3,
-			T_FOCUS_SHADOWS=3,
-			T_SHADOW_MAGES=1,
-			T_SHADOW_WARRIORS=1,
-		},
+		max_life = resolvers.rngavg(50,60),
+		max_mana = resolvers.rngavg(70,80),
+		combat_armor = 3, combat_def = 1,
+		stats = { str=10, dex=12, cun=16, mag=18, con=10 },
+		resolvers.talents{ T_STAFF_MASTERY={base=2, every=10, max=5}, T_FLAME={base=1, every=7, max=5}, T_MANATHRUST={base=2, every=7, max=5}, T_ARCANE_POWER={base=2, every=7, max=5} },
+		blighted_summon_talent = "T_BONE_SPEAR",
+		resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+		autolevel = "caster",
+		ai_state = { talent_in=1, },
 	},
 }
 
 local skeleton_warrior_order = {"d_skel_warrior", "skel_warrior", "a_skel_warrior"} -- Sets listing order
 local skeleton_archer_order = {"skel_archer", "skel_m_archer"}
 local skeleton_mage_order = {"skel_mage"}
-local lich_order = {"lich"}
 
 local function getSkeletonWarriorChances(self)
   local quality = math.floor(self:getTalentLevel(self.T_SKELETON_MASTERY))
@@ -339,7 +300,21 @@ local function getSkeletonArcherChances(self)
 end
 
 local function getSkeletonMageChances(self)
-	return { skel_mage=100 }
+	local quality = math.floor(self:getTalentLevel(self.T_SKELETON_MASTERY))
+	if quality == 2 then
+		return { skel_mage=80, skel_magus=20 }
+	elseif quality == 3 then
+		return { skel_mage=60, skel_magus=40 }
+	elseif quality == 4 then
+		return { skel_mage=40, skel_magus=60 }
+	elseif quality == 5 then
+		return { skel_mage=20, skel_magus=80 }
+	elseif quality == 6 then
+		return { skel_mage=0, skel_magus=100 }
+	else
+		-- level 1 or 0
+	  return { skel_mage=100, skel_magus=0 }
+	end
 end
 
 local function getLichChances(self)
@@ -397,23 +372,6 @@ local function summonSkeletonMage(self, lev)
 	return m
 end
 
-local function summonLich(self, lev)
-	local chances = getLichChances(self)
-	local pick = rng.float(0,100)
-	local tot, m = 0
-	for k, e in pairs(chances) do
-		tot = tot + e
-		if tot > pick then
-			m = k
-			break
-		end
-	end
-	m = require("mod.class.NPC").new(lich_list[m])
-	m.necrotic_minion = true
-	m.minion_type = "lich"
-	return m
-end
-
 newTalent{
 	name = "Summon Skeleton Warriors",
 	type = {"spell/skeletal-minions",1},
@@ -425,18 +383,11 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
-		return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_SKELETON_WARRIORS)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
-		if not p then return end
-		return true
 	end,
 	getMax = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -458,7 +409,6 @@ newTalent{
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
 		if trueNecroGetNbSummon(self,"warrior") < nb then
-			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
 			-- Summon minions in a cone
@@ -474,10 +424,9 @@ newTalent{
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 			local minion = summonSkeletonWarrior(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
+				necroSetupSummon(self, minion, pos.x, pos.y, lev)
 			end
 
 			local empower = necroEssenceDead(self)
@@ -493,10 +442,10 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising a long dead warrior to do your bidding. You can control up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Expend one of your captured souls to raise a long dead warrior to do your bidding. You can control up to %d warriors. The minion will be raised within a cone with a range of %d.
 		The minions level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
-		format(nb, lev, mm, t.MinionChancesDesc(self, t))
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 
@@ -512,18 +461,11 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
-		return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_SKELETON_ARCHERS)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
-		if not p then return end
-		return true
 	end,
 	getMax = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -545,7 +487,6 @@ newTalent{
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
 		if trueNecroGetNbSummon(self,"archer") < nb then
-			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
 			-- Summon minions in a cone
@@ -561,10 +502,9 @@ newTalent{
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 			local minion = summonSkeletonArcher(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
+				necroSetupSummon(self, minion, pos.x, pos.y, lev)
 			end
 
 			local empower = necroEssenceDead(self)
@@ -579,10 +519,10 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising a long dead marksman to do your bidding. You can control up to %d warriors. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Expend one of your captured souls to raise a long dead marksman to do your bidding. You can control up to %d archers. The minion will be raised within a cone with a range of %d.
 		The minion's level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
-		format(nb, lev, mm, t.MinionChancesDesc(self, t))
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 
@@ -598,18 +538,11 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	autolearn_talent = "T_TRUE_NECROTIC_AURA",
 	radius = function(self, t)
-		local aura = self:getTalentFromId(self.T_TRUE_NECROTIC_AURA)
-		return aura.getRadius(self, aura)
+		return 2 + self:getTalentLevelRaw(self.T_SUMMON_SKELETON_MAGES)
 	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	on_pre_use = function(self, t)
-		local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
-		if not p then return end
-		return true
 	end,
 	getMax = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -631,7 +564,6 @@ newTalent{
 		-- only allow the summon if we haven't exceeded the limit
 		local nb = t.getMax(self, t)
 		if trueNecroGetNbSummon(self,"mage") < nb then
-			local p = self:isTalentActive(self.T_TRUE_NECROTIC_AURA)
 			local lev = t.getLevel(self, t)
 
 			-- Summon minions in a cone
@@ -647,10 +579,9 @@ newTalent{
 			local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 			local minion = summonSkeletonMage(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
-			local no_decay = math.floor(self:getTalentLevel(self.T_TRUE_AURA_MASTERY), "log") > 4 -- stop decay at level 5
 			if minion and pos then
 				if use_ressource then self:incSoul(-1) end
-				necroSetupSummon(self, minion, pos.x, pos.y, lev, no_decay)
+				necroSetupSummon(self, minion, pos.x, pos.y, lev)
 			end
 
 			local empower = necroEssenceDead(self)
@@ -665,10 +596,10 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local mm = self:knowTalent(self.T_SKELETON_MASTERY) and " (Minion Strength effects included)" or ""
-		return ([[Fires powerful undead energies through your necrotic aura, raising an undead mage to do your bidding. You can control up to %d mages. The minion will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Expend one of your captured souls, raising an undead mage to do your bidding. You can control up to %d mages. The minions will be raised within a cone with a range of %d.
 		The minion's level is your level %+d.
 		Each minion has a chance to be%s:%s]]):
-		format(nb, lev, mm, t.MinionChancesDesc(self, t))
+		format(nb, self:getTalentRadius(t), lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 
